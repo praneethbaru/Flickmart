@@ -1,10 +1,51 @@
+<!DOCTYPE html>
 <html>
-  <head>
+  <head lang="en">
+    <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+ <link rel="stylesheet" type="text/css" href="css/index.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ <script src="js/index.js"></script>
   <title>FlickMart</title>
   </head>
-
   <body>
+    <!-- Navigation Bar-->
+    <nav class="navbar navbar-default navStyle ">
+    	<ul class="nav navbar-nav navList">
+    		<li style="" ><a href="#" style="padding:0;	max-width:10%;"><img src="images/logo.png" alt="Logo" class="logo"/></a></li>
+        
+    	</ul>
 
+    </nav>
 
+	<div class="container">
+		<div class="collage">
+      <!--Login-->
+			<div class="login">
+        <img src="images/clapper_login.png" alt="login image" class="login_logo">
+        <h2>LOGIN</h2>
+      <form class="login_form">
+			<input type="text" name="username" id="username" placeholder="USERNAME">
+			<input type="password" name="password" id="password" placeholder="PASSWORD">
+			<input type="button" value="Login" id="login"></input>
+    </form>
+      <a href="#" id="register_first">Not registered yet? Click to Register</a>
+			</div>
+      <!--Register -->
+      <div class="register">
+        <img src="images/clapper_register.png" alt="login image" class="register_logo">
+        <h2>REGISTER</h2>
+      <form class="register_form">
+        <input type="text" name="fullname" class="reg_input" id="name" placeholder="FULL NAME">
+        <input type="email" name="email"  class="reg_input" id="email" placeholder="EMAIL">
+        <input type="text" name="username"  class="reg_input" id="username" placeholder="USERNAME">
+        <input type="password" name="password"  class="reg_input" id="password" placeholder="PASSWORD">
+        <input type="password" name="cpassword"  class="reg_input" id="cpassword" placeholder="CONFIRM PASSWORD">
+        <input type="button" value="Register" id="register"></input>
+      </div>
+		</div>
+	</div>
   </body>
 </html>

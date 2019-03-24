@@ -1,0 +1,98 @@
+td{
+  padding: 20px;
+}
+
+th{
+  padding: 0;
+}
+.logo{
+  position: relative;
+width: 400%;
+padding: 0 10%;
+}
+.collage{
+  background-image: url("../images/moviesCollage.png");
+display:block;
+height:-webkit-fill-available;
+  background-size: contain;
+  background-repeat: repeat-x;
+  background-color: rgba(2, 2, 2, 0.82);
+background-blend-mode: multiply;
+}
+.container{
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+.navStyle{
+  margin-bottom: 0;
+}
+.login{
+
+  padding: 2%;
+  position: absolute;
+  position: absolute;
+  width: 25%;
+    margin: 7% 37%;
+    text-align: center;;
+  height: initial;
+  background-color: white;
+}
+.login_logo{
+  width: 20%;
+margin-left: auto;
+margin-right: auto;
+position: relative;
+    margin: 2% 40%;
+}
+.login_form{
+  font-size: 15px;
+}
+#login{
+  background-color: black;
+  color: white;
+  border: black;
+  padding: 3% 43%;
+}
+ input{
+   padding: 3% 15%;
+ margin: 4% 0;
+ text-align: center;
+}
+
+.register{
+  display: none;
+  padding: 2%;
+  position: absolute;
+  position: absolute;
+  width: 25%;
+    margin: 4% 37%;
+    text-align: center;;
+  height: initial;
+  background-color: white;
+}
+.register_logo{
+  width: 28%;
+margin-left: auto;
+margin-right: auto;
+position: relative;
+margin: -5% 34%;
+}
+.register_form{
+  font-size: 15px;
+  padding: 3% 15%;
+margin: 4% 0;
+text-align: center;
+}
+.reg_input{
+  padding: 3% 15%;
+  margin: 3% -15%;
+  text-align: center;
+}
+#register{
+  background-color: black;
+  color: white;
+  border: black;
+  padding: 4% 50%;
+  margin: 3% -25%;
+}
