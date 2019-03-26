@@ -1,3 +1,8 @@
+* {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+}
+
 td{
   padding: 20px;
 }
@@ -5,10 +10,13 @@ td{
 th{
   padding: 0;
 }
+
+a:hover {
+  text-decoration: none;
+}
 .logo{
   position: relative;
-width: 400%;
-padding: 0 10%;
+width:10%;
 }
 .collage{
   background-image: url("../images/moviesCollage.png");
@@ -33,10 +41,11 @@ background-blend-mode: multiply;
   position: absolute;
   position: absolute;
   width: 25%;
-    margin: 7% 37%;
-    text-align: center;;
+  margin: 0% 37%;
+  text-align: center;;
   height: initial;
   background-color: white;
+  border-radius: 30px;
 }
 .login_logo{
   width: 20%;
@@ -48,28 +57,37 @@ position: relative;
 .login_form{
   font-size: 15px;
 }
+
+ input{
+   width: 90%;
+   padding: 3% 15%;
+   margin: 4% 0;
+   text-align: center;
+   border-radius: 15px;
+}
+
 #login{
+  width: 50%;
   background-color: black;
   color: white;
   border: black;
-  padding: 3% 43%;
-}
- input{
-   padding: 3% 15%;
- margin: 4% 0;
- text-align: center;
+  padding: 3% 10%;
+  border-radius: 50px;
+  font-size: 120%;
 }
 
 .register{
+    width: 50%;
   display: none;
   padding: 2%;
   position: absolute;
   position: absolute;
   width: 25%;
-    margin: 4% 37%;
+    margin: -4% 37%;
     text-align: center;;
   height: initial;
   background-color: white;
+  border-radius: 30px;
 }
 .register_logo{
   width: 28%;
@@ -80,19 +98,21 @@ margin: -5% 34%;
 }
 .register_form{
   font-size: 15px;
-  padding: 3% 15%;
-margin: 4% 0;
+
 text-align: center;
 }
 .reg_input{
-  padding: 3% 15%;
-  margin: 3% -15%;
+  padding: 2% 5%;
+margin: 4% -15%;
   text-align: center;
 }
 #register{
+  width: 50%;
   background-color: black;
   color: white;
   border: black;
-  padding: 4% 50%;
+  padding: 4%;
   margin: 3% -25%;
+  border-radius: 50px;
+  font-size: 120%;
 }

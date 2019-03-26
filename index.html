@@ -6,22 +6,18 @@
 
  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
  <link rel="stylesheet" type="text/css" href="css/index.css">
+ <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
  <script src="js/index.js"></script>
   <title>FlickMart</title>
   </head>
   <body>
-    <!-- Navigation Bar-->
-    <nav class="navbar navbar-default navStyle ">
-    	<ul class="nav navbar-nav navList">
-    		<li style="" ><a href="#" style="padding:0;	max-width:10%;"><img src="images/logo.png" alt="Logo" class="logo"/></a></li>
-        
-    	</ul>
-
-    </nav>
-
 	<div class="container">
+
 		<div class="collage">
+      <img src="images/logo.png" alt="Logo" class="logo"/>
       <!--Login-->
 			<div class="login">
         <img src="images/clapper_login.png" alt="login image" class="login_logo">
@@ -31,7 +27,7 @@
 			<input type="password" name="password" id="password" placeholder="PASSWORD">
 			<input type="button" value="Login" id="login"></input>
     </form>
-      <a href="#" id="register_first">Not registered yet? Click to Register</a>
+      <a href="#" id="register_link">Not registered yet? Click to Register</a>
 			</div>
       <!--Register -->
       <div class="register">
@@ -43,7 +39,10 @@
         <input type="text" name="username"  class="reg_input" id="username" placeholder="USERNAME">
         <input type="password" name="password"  class="reg_input" id="password" placeholder="PASSWORD">
         <input type="password" name="cpassword"  class="reg_input" id="cpassword" placeholder="CONFIRM PASSWORD">
+        <br>
         <input type="button" value="Register" id="register"></input>
+        <br>
+        <a href="#" id="login_link">Already registered? Click to Login</a>
       </div>
 		</div>
 	</div>
