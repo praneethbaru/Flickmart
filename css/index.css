@@ -83,7 +83,7 @@ position: relative;
   position: absolute;
   position: absolute;
   width: 25%;
-    margin: -4% 37%;
+    margin: -7% 37%;
     text-align: center;;
   height: initial;
   background-color: white;
@@ -103,16 +103,29 @@ text-align: center;
 }
 .reg_input{
   padding: 2% 5%;
-margin: 4% -15%;
+margin: 6% -15% 0% -15%;
+//4, -15%
   text-align: center;
 }
-#register{
-  width: 50%;
-  background-color: black;
-  color: white;
-  border: black;
-  padding: 4%;
-  margin: 3% -25%;
-  border-radius: 50px;
-  font-size: 120%;
+#register,#login_link{
+  width: 44%;
+background-color: black;
+color: white;
+border: black;
+padding: 2%;
+margin: 6% 0 0 1%;
+border-radius: 50px;
+font-size: 105%;
+}
+.error{
+  display: none;
+  float: left;
+  color: red;
+  margin:2px 0%;
+}
+table{
+  width: 100%;
+}
+td{
+  padding: 0;
 }

@@ -34,15 +34,17 @@
         <img src="images/clapper_register.png" alt="login image" class="register_logo">
         <h2>REGISTER</h2>
       <form class="register_form">
-        <input type="text" name="fullname" class="reg_input" id="name" placeholder="FULL NAME">
-        <input type="email" name="email"  class="reg_input" id="email" placeholder="EMAIL">
-        <input type="text" name="username"  class="reg_input" id="username" placeholder="USERNAME">
-        <input type="password" name="password"  class="reg_input" id="password" placeholder="PASSWORD">
-        <input type="password" name="cpassword"  class="reg_input" id="cpassword" placeholder="CONFIRM PASSWORD">
-        <br>
+        <table>
+        <tr><td><input type="text" name="fullname" class="reg_input" id="name" placeholder="FULL NAME"></td></tr>
+        <tr><td><input type="email" name="email"  class="reg_input" id="email" placeholder="EMAIL"></td></tr>
+        <tr><td><input type="text" name="username"  class="reg_input" id="rusername" placeholder="USERNAME"></td></tr>
+        <tr><td><input type="password" name="password"  class="reg_input" id="rpassword" placeholder="PASSWORD"></td></tr>
+        <tr><td><input type="password" name="cpassword"  class="reg_input" id="cpassword" placeholder="CONFIRM PASSWORD"></td></tr>
+           </table>
         <input type="button" value="Register" id="register"></input>
-        <br>
-        <a href="#" id="login_link">Already registered? Click to Login</a>
+        <input type="button" value="Back to Login" id="login_link"></input>
+
+      </form>
       </div>
 		</div>
 	</div>
