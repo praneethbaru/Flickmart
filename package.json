@@ -1,0 +1,32 @@
+{
+  "name": "flickmart",
+  "version": "1.0.0",
+  "description": "A Web Application simulating an Online Movie Store.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/praneethkumar900/flickmart.git"
+  },
+  "keywords": [
+    "node",
+    "mongodb",
+    "html",
+    "css",
+    "jquery",
+    "restful",
+    "services",
+    "web",
+    "online",
+    "movie",
+    "store"
+  ],
+  "author": "Praneeth Kumar Baru",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/praneethkumar900/flickmart/issues"
+  },
+  "homepage": "https://github.com/praneethkumar900/flickmart#readme"
+}
