@@ -2,9 +2,10 @@
   "name": "flickmart",
   "version": "1.0.0",
   "description": "A Web Application simulating an Online Movie Store.",
-  "main": "index.js",
+  "main": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server/server.js"
   },
   "repository": {
     "type": "git",
@@ -28,5 +29,13 @@
   "bugs": {
     "url": "https://github.com/praneethkumar900/flickmart/issues"
   },
-  "homepage": "https://github.com/praneethkumar900/flickmart#readme"
+  "homepage": "https://github.com/praneethkumar900/flickmart#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongodb": "^3.2.2",
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
 }

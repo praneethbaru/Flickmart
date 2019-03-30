@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const dbUtil = require('./mongoDbUtil');
+const pageRoutes = require("./page");
 const customerRoutes = require('./api/customer');
 
 // Using morgan module for error handling
@@ -18,6 +19,9 @@ dbUtil.connect(function(error){
         console.log(error);
     }
 });
+
+// Web Page routes
+app.use("/page", pageRoutes);
 
 // API routes
 app.use("/customer", customerRoutes);
