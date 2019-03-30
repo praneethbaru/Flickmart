@@ -1,0 +1,7 @@
+{
+    "env": {
+        "port": 8080,
+        "db_url": "localhost:27017",
+        "db_database": "moviedb"
+    }
+}
