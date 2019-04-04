@@ -3,6 +3,7 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const path = require('path');
 const dbUtil = require('./mongoDbUtil');
 const pageRoutes = require("./page");
 const customerRoutes = require('./api/customer');
@@ -21,7 +22,12 @@ dbUtil.connect(function(error){
 });
 
 // Web Page routes
-app.use("/page", pageRoutes);
+app.use("/", pageRoutes);
+
+// Static file routes (For CSS, JS, Images)
+app.use("/css", express.static(path.join(__dirname, '../css')));
+app.use("/js", express.static(path.join(__dirname, '../js')));
+app.use("/images", express.static(path.join(__dirname, '../images')));
 
 // API routes
 app.use("/customer", customerRoutes);

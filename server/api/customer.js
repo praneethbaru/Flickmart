@@ -19,7 +19,7 @@ router.get('/:customerId', function(request, response, next) {
     dbUtil.getDb().collection("customer").findOne(query, function(error, result) {
         if (error) {
             response.status(500).json({"error": error.message});
-            throw error;
+            return;
         }
 
         response.status(200).json(result);
@@ -40,7 +40,7 @@ router.post('/insert', function(request, response, next){
     dbUtil.getDb().collection("customer").insertOne(customerObj, function(error, result) {
         if (error) {
             response.status(500).json({"error": error.message});
-            throw error;
+            return;
         }
 
         response.status(200).json({"success": result.insertedCount + " document(s) inserted"});
@@ -61,7 +61,7 @@ router.get('/checkemail/:customerEmail', function(request, response, next) {
     dbUtil.getDb().collection("customer").findOne(query, function(error, result) {
         if (error) {
             response.status(500).json({"error": error.message});
-            throw error;
+            return;
         }
 
         var found = true;
@@ -89,7 +89,7 @@ router.get('/login/:customerEmail/:customerPassword', function(request, response
     dbUtil.getDb().collection("customer").findOne(query, function(error, result) {
         if (error) {
             response.status(500).json({"error": error.message});
-            throw error;
+            return;
         }
 
         if(!result){

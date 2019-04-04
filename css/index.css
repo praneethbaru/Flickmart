@@ -42,6 +42,7 @@ input{
      padding: 0;
      margin: 0;
 }
+
 /*--------------------------Login Section-------------------------- */
 .login_logo{
      width: 20%;
@@ -73,6 +74,7 @@ input{
      border-radius: 40px;
      font-size: 120%;
 }
+
 /*--------------------------Register Section-------------------------- */
 .register_logo{
      width: 28%;
@@ -153,8 +155,9 @@ meter[value="3"]::-moz-meter-bar {
 meter[value="4"]::-moz-meter-bar {
      background: green;
 }
+
 /*----------Register and Back to Login----------*/
-#register,#back_to_login{
+#register, #back_to_login{
      width: 40%;
      background-color: black;
      color: white;
