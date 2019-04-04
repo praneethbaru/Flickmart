@@ -6,6 +6,9 @@
 *:focus{
      outline: none;
 }
+body{
+    overflow-y: hidden;
+}
 table{
     width: 100%;
 }
@@ -73,6 +76,9 @@ input{
      padding: 4% 10%;
      border-radius: 40px;
      font-size: 120%;
+}
+#register_success, #login_fail{
+    display: none;
 }
 
 /*--------------------------Register Section-------------------------- */

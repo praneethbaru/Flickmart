@@ -1,5 +1,6 @@
 $(document).ready(function() {
     var register_fname = "", register_lname = "", register_email = "", register_phone = "", register_pass = "", register_cpass = "";
+    var login_email = "", login_pass = "";
     var pass_strength = -1;
     var main_url = window.location.protocol + "//" + window.location.host;
 
@@ -64,8 +65,30 @@ $(document).ready(function() {
                 $(".error_remail").show();
                 register_email = "true";
             } else {
-                $(".error_remail").hide();
-                register_email = "false";
+
+                var url = main_url + "/customer/checkemail/" + email;
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    dataType: "json",
+                    success: function(response){
+                        if(response && response.found){
+                            $(".error_remail").text("Email address already exists.");
+                            $(".error_remail").show();
+                            register_email = "true";
+                        }
+                        else{
+                            $(".error_remail").hide();
+                            register_email = "false";
+                        }
+                    },
+                    error: function(response){
+                        console.log("Error occured: " + response.responseText);
+                        $(".error_remail").text("Unable to verify email.");
+                        $(".error_remail").show();
+                        register_email = "true";
+                    }
+                });
             }
         });
 
@@ -172,11 +195,14 @@ $(document).ready(function() {
             if (email == "") {
                 $(".error_email").text("Email cannot be empty");
                 $(".error_email").show();
+                login_email = "true";
             } else if (!valid) {
                 $(".error_email").text("Invalid email address");
                 $(".error_email").show();
+                login_email = "true";
             } else {
                 $(".error_email").hide();
+                login_email = "false";
             }
         });
 
@@ -188,8 +214,10 @@ $(document).ready(function() {
             if (password == "") {
                 $(".error_password").text("Password cannot be empty");
                 $(".error_password").show();
+                login_pass = "true";
             } else {
                 $(".error_password").hide();
+                login_pass = "false";
             }
         });
     };
@@ -240,7 +268,38 @@ $(document).ready(function() {
                 $('.reg_input').val('');
             }
         });
-    }
+    };
+
+    /*-------------------- Login user --------------------*/
+    var onLoginUser = function(){
+
+        if(login_email != "false" || login_pass != "false") {
+            return;
+        }
+
+        login_pass = "", login_email = "";
+        $("#register_success").hide();
+
+        var url = main_url + "/customer/login/" + $("#email").val() + "/" + $("#password").val();
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            success: function(response){
+                if(response && response.success){
+                    $("#login_fail").hide();
+                    window.location = main_url + "/mainpage";
+                }
+                else{
+                    $("#login_fail").show();
+                }
+            },
+            error: function(response){
+                console.log("Error occured: " + response.responseText);
+                $("#login_fail").show();
+            }
+        });
+    };
 
     /*-------------------- Adds all event listeners on page --------------------*/
     var addEventListeners = function(){
@@ -253,7 +312,10 @@ $(document).ready(function() {
 
             $(".error").hide();
             $('#email, #password').val('');
-            $("register_success").hide();
+            $("#register_success").hide();
+            $("#login_fail").hide();
+
+            login_pass = "", login_email = "";
         });
 
         /*-------------------- Animations on clicking back_to_login buttton --------------------*/
@@ -264,10 +326,14 @@ $(document).ready(function() {
 
             $(".error").hide();
             $('.reg_input').val('');
-            $("register_fail").hide();
+            $("#register_fail").hide();
+
+            register_fname = "", register_lname = "", register_email = "", register_phone = "", register_pass = "", register_cpass = "";
+            pass_strength = -1;
         });
 
         $("#register").on("click", onRegisterUser);
+        $("#login").on("click", onLoginUser);
 
         addLoginValidations();
         addRegisterValidations();
@@ -277,6 +343,7 @@ $(document).ready(function() {
     var initIndex = function(){
         $("#register_success").hide();
         $("#register_fail").hide();
+        $("#login_fail").hide();
 
         addEventListeners();
     };

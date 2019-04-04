@@ -97,15 +97,12 @@ router.get('/login/:customerEmail/:customerPassword', function(request, response
             return;
         }
 
-        var responseObj = {};
         if(result.password.trim() == customerPassword.trim()){
-            responseObj['success'] = true;
+            response.status(200).json({"success": true});
         }
         else{
-            responseObj['success'] = false;
+            response.status(200).json({"success": false});
         }
-
-        response.status(200).json(responseObj);
     });
 });
 
