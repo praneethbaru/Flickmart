@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const path = require('path');
+const session = require('express-session');
 const dbUtil = require('./mongoDbUtil');
 const pageRoutes = require("./page");
 const customerRoutes = require('./api/customer');
@@ -21,6 +22,16 @@ dbUtil.connect(function(error){
     }
 });
 
+// Setting up session
+app.use(session({
+    secret: process.env.app_secret,
+    resave: true,
+    saveUninitialized: true,
+    cookie : {
+        maxAge : process.env.app_timeout * 1000
+    }
+}));
+
 // Web Page routes
 app.use("/", pageRoutes);
 
@@ -33,7 +44,7 @@ app.use("/images", express.static(path.join(__dirname, '../images')));
 app.use("/customer", customerRoutes);
 
 // Throwing error if requests reach this line instead of using the above customerRoutes
-app.use(function(request, repsonse, next){
+app.use(function(request, response, next){
     var error = new Error('Not found');
     error.status = 404;
     next(error);

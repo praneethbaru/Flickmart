@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
+const authUtil = require('./authUtil');
 
 // Get index page
 router.get('/index', function(request, response, next) {
@@ -18,7 +19,7 @@ router.get('/index', function(request, response, next) {
 });
 
 // Get main page
-router.get('/mainpage', function(request, response, next) {
+router.get('/mainpage', authUtil, function(request, response, next) {
     fs.readFile('mainpage.html', function(err, data) {
         if(err){
             throw err;

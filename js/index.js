@@ -280,11 +280,13 @@ $(document).ready(function() {
         login_pass = "", login_email = "";
         $("#register_success").hide();
 
-        var url = main_url + "/customer/login/" + $("#email").val() + "/" + $("#password").val();
+        var url = main_url + "/customer/login";
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: url,
             dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({"email": $("#email").val(), "password": $("#password").val()}),
             success: function(response){
                 if(response && response.success){
                     $("#login_fail").hide();

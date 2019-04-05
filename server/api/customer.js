@@ -3,10 +3,11 @@
 const express = require('express');
 const router = express.Router();
 const dbUtil = require('./../mongoDbUtil');
+const authUtil = require('./../authUtil');
 const ObjectId = require('mongodb').ObjectId;
 
 // Get customers with id endpoint
-router.get('/:customerId', function(request, response, next) {
+router.get('/:customerId', authUtil, function(request, response, next) {
     var customerId = request.params.customerId;
     if(customerId == null || !ObjectId.isValid(customerId)) {
         response.status(500).json({
@@ -74,9 +75,9 @@ router.get('/checkemail/:customerEmail', function(request, response, next) {
 });
 
 // Customer login check
-router.get('/login/:customerEmail/:customerPassword', function(request, response, next) {
-    var customerEmail = request.params.customerEmail;
-    var customerPassword = request.params.customerPassword;
+router.post('/login', function(request, response, next) {
+    var customerEmail = request.body.email;
+    var customerPassword = request.body.password;
 
     if(customerEmail == null || customerPassword == null) {
         response.status(500).json({
@@ -98,12 +99,22 @@ router.get('/login/:customerEmail/:customerPassword', function(request, response
         }
 
         if(result.password.trim() == customerPassword.trim()){
+            request.session.user = result.email;
+            request.session.role = result.role;
             response.status(200).json({"success": true});
         }
         else{
             response.status(200).json({"success": false});
         }
     });
+});
+
+// Customer logout
+router.get('/terminate/logout', function(request, response, next) {
+    if(request.session){
+        request.session.destroy();
+    }
+    response.status(200).json({"success": true});
 });
 
 module.exports = router;
