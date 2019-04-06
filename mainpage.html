@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/mainpage.css">
 
     <title>FlickMart</title>
@@ -16,22 +19,144 @@
 
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-default navStyle">
+    <nav class="navbar navbar-default navStyle navbarStyle">
         <ul class="nav navbar-nav navList">
-            <li style="">
-                <a href="#"><img src="images/logo.png " alt="Logo " class="logo" /></li>
+            <li class="col-sm-4" style="">
+                <a href="#"><img src="images/logo.png " alt="Logo " class="logo" /></a>
+            </li>
+            <li class="col-sm-4">
+               <input type="text" id="search"><a href="#" id="search_btn"><span class="glyphicon glyphicon-search search_icon"></span></a></input>
+            </li>
+            <li class="col-sm-4">
+               <div class="row col3">
+                 <div class="col-sm-4">
+                   <a href="#">
+                   <span class="glyphicon glyphicon-user user_icon"></span>
+                  </a>
+                </div>
+                 <div class="col-sm-4"><a id="logout_button" href="#">Logout</a></div>
+               </div>
+            </li>
         </ul>
     </nav>
 
     <!-- Body -->
     <div class="container ">
         <div class="row ">
-            <div class="col-sm-12 ">
-                <h2>content here...</h2>
-                <div><a id="logout_button" href="#">Logout</a></div>
+          <!--card1- col1-->
+            <div class="col-sm-3 card">
+              <!--title and image row-->
+              <div class="row">
+                <img src="images/clapper_login.png" alt="movie_image"/>
+              </div>
+              <!--body and description row-->
+              <div class="row description">
+                <h3>Title</h3>
+                <p class="desc"><b>GENRE:</b> Action, Thriller</p>
+                  <p class="desc"><b>RATING:</b> 8.4</p>
+                    <p class="desc"><b>PRICE:</b> 0$</p>
+                <div class="col-sm-6" style="margin: 5% 0;">
+                <button type="button" class="btn btn-primary" id="know_more" data-toggle="modal" data-target="#myModal">KNOW MORE...</button>
+                </div>
+                <div class="col-sm-6" style="margin: 5% 0;">
+                <button type="button" id="addToCart">ADD TO CART</button>
+                </div>
+              </div>
+
+            </div>
+            <!--card2-col2-->
+            <div class="col-sm-3 card">
+                <div class="row">
+                <img src="images/clapper_login.png" alt="movie_image"/>
+                </div>
+                <div class="row description">
+                  <h3>Title</h3>
+                  <p class="desc"><b>GENRE:</b> Action, Thriller</p>
+                    <p class="desc"><b>RATING:</b> 8.4</p>
+                      <p class="desc"><b>PRICE:</b> 0$</p>
+                  <div class="col-sm-6" style="margin: 5% 0;">
+                  <button type="button" class="btn btn-primary" id="know_more" data-toggle="modal" data-target="#myModal" >KNOW MORE...</button>
+                  </div>
+                  <div class="col-sm-6" style="margin: 5% 0;">
+                  <button type="button" id="addToCart">ADD TO CART</button>
+                  </div>
+                </div>
+            </div>
+            <!--card3-col3-->
+            <div class="col-sm-3 card">
+                  <div class="row">
+                <img src="images/clapper_login.png" alt="movie_image"/>
+              </div>
+
+                <div class="row description">
+                  <h3>Title</h3>
+                  <p class="desc"><b>GENRE:</b> Action, Thriller</p>
+                    <p class="desc"><b>RATING:</b> 8.4</p>
+                      <p class="desc"><b>PRICE:</b> 0$</p>
+                  <div class="col-sm-6" style="margin: 5% 0;">
+                  <button type="button" class="btn btn-primary" id="know_more" data-toggle="modal" data-target="#myModal">KNOW MORE...</button>
+                  </div>
+                  <div class="col-sm-6" style="margin: 5% 0;">
+                  <button type="button" id="addToCart">ADD TO CART</button>
+                  </div>
+                </div>
             </div>
         </div>
+
+        <!-- The Modal -->
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h2 class="modal-title">Title</h2>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body row">
+            <div class="col-sm-4 left_col ">
+              <img src="images/clapper_login.png" alt="movie_image" style="width: 100%;border-radius: 20px;"/>
+              <p> <b>PRICE : </b> 0$ </p>
+              <p> <b>STOCK : </b> 10 </p>
+              <button type="button" id="addToCart" class="addToCart_btn">ADD TO CART</button>
+            </div>
+            <div class="col-sm-8 right_col">
+              <table class="modal_desc">
+                <tr><th>Genre : </th><td>Action, Thriller</td></tr>
+                <tr><th>Released : </th><td>20 Jul 2012</td></tr>
+                <tr><th>Rated : </th><td>PG-13</td></tr>
+                <tr><th>Director : </th><td>Christopher Nolan</td></tr>
+                <tr><th>Writer : </th><td>Jonathan Nolan (screenplay), Christopher Nolan (screenplay), Christopher Nolan (story), David S. Goyer (story), Bob Kane (characters)</td></tr>
+                <tr><th>Actors : </th><td>Christian Bale, Gary Oldman, Tom Hardy, Joseph Gordon-Levitt</td></tr>
+                <tr><th>Plot : </th><td>Eight years after the Joker's reign of anarchy, Batman, with the help of the enigmatic Catwoman, is forced from his exile to save Gotham City, now on the edge of total annihilation, from the brutal guerrilla terrorist Bane.</td></tr>
+                <tr><th>Runtime : </th><td>164 min</td></tr>
+                <tr><th>Ratings : </th><td>8.4</td></tr>
+                <tr><th>Language : </th><td>English, Arabic</td></tr>
+                <tr><th>Country : </th><td>UK, USA</td></tr>
+                <tr><th>Awards : </th><td>Nominated for 1 BAFTA Film Award. Another 38 wins & 102 nominations.</td></tr>
+                <tr><th>Production : </th><td>Warner Bros. Pictures</td></tr>
+                <tr><th>BoxOffice : </th><td>$448,130,642</td></tr>
+                <tr><th>Website : </th><td><a href="http://www.thedarkknightrises.com/">http://www.thedarkknightrises.com/</a></td></tr>
+              </table>
+            </div>
+            <!--
+
+	"BoxOffice": "$448,130,642",
+	"Production": "Warner Bros. Pictures",
+	"Website": "http://www.thedarkknightrises.com/"-->
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
     </div>
+  </div>
+
+</div><!--container-->
 
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
