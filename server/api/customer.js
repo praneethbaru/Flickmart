@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const dbUtil = require('./../mongoDbUtil');
 const authUtil = require('./../authUtil');
+const bcrypt = require('bcrypt');
 const ObjectId = require('mongodb').ObjectId;
 
 // Get customers with id endpoint
@@ -38,14 +39,24 @@ router.post('/insert', function(request, response, next){
         return;
     }
 
-    dbUtil.getDb().collection("customer").insertOne(customerObj, function(error, result) {
-        if (error) {
-            response.status(500).json({"error": error.message});
+    bcrypt.hash(customerObj.password, 2, function(err, hash) {
+        if(err){
+            response.status(500).json({"error": err.message});
             return;
         }
 
-        response.status(200).json({"success": result.insertedCount + " document(s) inserted"});
+        customerObj.password = hash;
+
+        dbUtil.getDb().collection("customer").insertOne(customerObj, function(error, result) {
+            if (error) {
+                response.status(500).json({"error": error.message});
+                return;
+            }
+
+            response.status(200).json({"success": result.insertedCount + " document(s) inserted"});
+        });
     });
+
 });
 
 // Check if customer email exists
@@ -98,14 +109,21 @@ router.post('/login', function(request, response, next) {
             return;
         }
 
-        if(result.password.trim() == customerPassword.trim()){
-            request.session.user = result.email;
-            request.session.role = result.role;
-            response.status(200).json({"success": true});
-        }
-        else{
-            response.status(200).json({"success": false});
-        }
+        bcrypt.compare(customerPassword, result.password, function(err, res) {
+            if (err) {
+                response.status(500).json({"error": err.message});
+                return;
+            }
+
+            if(res){
+                request.session.user = result.email;
+                request.session.role = result.role;
+                response.status(200).json({"success": true});
+            }
+            else{
+                response.status(200).json({"success": false});
+            }
+        });
     });
 });
 

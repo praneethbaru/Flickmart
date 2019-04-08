@@ -9,7 +9,7 @@ const dbUtil = require('./mongoDbUtil');
 const pageRoutes = require("./page");
 const customerRoutes = require('./api/customer');
 
-// Using morgan module for error handling
+// Using morgan module for logging
 app.use(morgan('dev'));
 
 // Parsing JSON body data in requests

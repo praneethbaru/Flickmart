@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"moviedb.customer"},{"v":2,"unique":true,"key":{"email":1.0},"name":"email_1","ns":"moviedb.customer"}],"uuid":"f3036fe6859d43028f15c39823f5a272"}
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"moviedb.customer"},{"v":2,"unique":true,"key":{"email":1.0},"name":"email_1","ns":"moviedb.customer"}],"uuid":"adaed1cfa45a4da8a47ee468c33d7766"}
