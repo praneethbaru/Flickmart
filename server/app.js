@@ -8,6 +8,7 @@ const session = require('express-session');
 const dbUtil = require('./mongoDbUtil');
 const pageRoutes = require("./page");
 const customerRoutes = require('./api/customer');
+const movieRoutes = require('./api/movies');
 
 // Using morgan module for error handling
 app.use(morgan('dev'));
@@ -42,6 +43,7 @@ app.use("/images", express.static(path.join(__dirname, '../images')));
 
 // API routes
 app.use("/customer", customerRoutes);
+app.use("/movies", movieRoutes);
 
 // Throwing error if requests reach this line instead of using the above customerRoutes
 app.use(function(request, response, next){

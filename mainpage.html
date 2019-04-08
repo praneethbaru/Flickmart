@@ -25,7 +25,14 @@
                 <a href="#"><img src="images/logo.png " alt="Logo " class="logo" /></a>
             </li>
             <li class="col-sm-4">
-               <input type="text" id="search"><a href="#" id="search_btn"><span class="glyphicon glyphicon-search search_icon"></span></a></input>
+               <input type="text" id="search"><a href="#" id="search_btn"><span class="glyphicon glyphicon-search search_icon"></span>
+                 <span class="glyphicon glyphicon-filter filter_icon" id="filter"> </span></a></input>
+                 <div class="filter_content">
+                 <input type="checkbox" name="genre" value="Genre"> Genre<br>
+                 <input type="checkbox" name="ratings" value="ratings">Ratings<br>
+                 <input type="checkbox" name="language" value="language" > Language<br>
+                 <input type="checkbox" name="price" value="price" checked> Price</input>
+               </div>
             </li>
             <li class="col-sm-4">
                <div class="row col3">
@@ -156,6 +163,9 @@
     </div>
   </div>
 
+<div class="row">
+  <p class="page">Page <span id="page1">1</span> of <span id="page2">50</span></p>
+</div>
 </div><!--container-->
 
     <!-- Scripts -->
