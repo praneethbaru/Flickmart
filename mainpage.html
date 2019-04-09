@@ -25,22 +25,27 @@
                 <a href="#"><img src="images/logo.png " alt="Logo " class="logo" /></a>
             </li>
             <li class="col-sm-4">
-               <input type="text" id="search"><a href="#" id="search_btn"><span class="glyphicon glyphicon-search search_icon"></span>
-                 <span class="glyphicon glyphicon-filter filter_icon" id="filter"> </span></a></input>
+               <input type="text" id="search"></input>
+               <a href="#" id="search_btn" id-"search_btn">
+                 <span class="glyphicon glyphicon-search search_icon"></span>
+                 </a>
                  <div class="filter_content">
-                 <input type="checkbox" name="genre" value="Genre"> Genre<br>
-                 <input type="checkbox" name="ratings" value="ratings">Ratings<br>
-                 <input type="checkbox" name="language" value="language" > Language<br>
-                 <input type="checkbox" name="price" value="price" checked> Price</input>
+
                </div>
             </li>
             <li class="col-sm-4">
                <div class="row col3">
-                 <div class="col-sm-4">
+                 <div class="col-sm-2">
                    <a href="#">
                    <span class="glyphicon glyphicon-user user_icon"></span>
                   </a>
                 </div>
+                <div class="col-sm-2" >
+                  <a href="#">
+                    <span class="glyphicon glyphicon-shopping-cart user_icon" id="cart_icon" data-toggle="modal" data-target="#myCart"></span>
+                  </a>
+               </div>
+
                  <div class="col-sm-4"><a id="logout_button" href="#">Logout</a></div>
                </div>
             </li>
@@ -48,113 +53,107 @@
     </nav>
 
     <!-- Body -->
-    <div class="container ">
-        <div class="row ">
-          <!--card1- col1-->
-            <div class="col-sm-3 card">
-              <!--title and image row-->
-              <div class="row">
-                <img src="images/clapper_login.png" alt="movie_image"/>
-              </div>
-              <!--body and description row-->
-              <div class="row description">
-                <h3>Title</h3>
-                <p class="desc"><b>GENRE:</b> Action, Thriller</p>
-                  <p class="desc"><b>RATING:</b> 8.4</p>
-                    <p class="desc"><b>PRICE:</b> 0$</p>
-                <div class="col-sm-6" style="margin: 5% 0;">
-                <button type="button" class="btn btn-primary" id="know_more" data-toggle="modal" data-target="#myModal">KNOW MORE...</button>
-                </div>
-                <div class="col-sm-6" style="margin: 5% 0;">
-                <button type="button" id="addToCart">ADD TO CART</button>
-                </div>
-              </div>
-
-            </div>
-            <!--card2-col2-->
-            <div class="col-sm-3 card">
-                <div class="row">
-                <img src="images/clapper_login.png" alt="movie_image"/>
-                </div>
-                <div class="row description">
-                  <h3>Title</h3>
-                  <p class="desc"><b>GENRE:</b> Action, Thriller</p>
-                    <p class="desc"><b>RATING:</b> 8.4</p>
-                      <p class="desc"><b>PRICE:</b> 0$</p>
-                  <div class="col-sm-6" style="margin: 5% 0;">
-                  <button type="button" class="btn btn-primary" id="know_more" data-toggle="modal" data-target="#myModal" >KNOW MORE...</button>
-                  </div>
-                  <div class="col-sm-6" style="margin: 5% 0;">
-                  <button type="button" id="addToCart">ADD TO CART</button>
-                  </div>
-                </div>
-            </div>
-            <!--card3-col3-->
-            <div class="col-sm-3 card">
-                  <div class="row">
-                <img src="images/clapper_login.png" alt="movie_image"/>
-              </div>
-
-                <div class="row description">
-                  <h3>Title</h3>
-                  <p class="desc"><b>GENRE:</b> Action, Thriller</p>
-                    <p class="desc"><b>RATING:</b> 8.4</p>
-                      <p class="desc"><b>PRICE:</b> 0$</p>
-                  <div class="col-sm-6" style="margin: 5% 0;">
-                  <button type="button" class="btn btn-primary" id="know_more" data-toggle="modal" data-target="#myModal">KNOW MORE...</button>
-                  </div>
-                  <div class="col-sm-6" style="margin: 5% 0;">
-                  <button type="button" id="addToCart">ADD TO CART</button>
-                  </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- The Modal -->
+    <div class="container row">
+      <!-- left filter panel-->
+       <div class="col-sm-2 filter_pane">
+        <h3>FILTER <span class="glyphicon glyphicon-filter filter_icon" id="filter"> </span></h3>
+        <div class="genre_filter">
+        <h4>GENRE</h4>
+        <input type="checkbox" name="action" value="Action" checked> Action<br>
+        <input type="checkbox" name="comedy" value="Comedy" > Comedy<br>
+        <input type="checkbox" name="thriller" value="Thriller" > Thriller<br>
+        <input type="checkbox" name="horror" value="Horror" > Horror<br>
+        <input type="checkbox" name="romance" value="Romance" > Romance<br>
+        <input type="checkbox" name="family" value="Family" > Family<br>
+        <input type="checkbox" name="sci-fi" value="Sci-Fi" > Sci-Fi<br>
+        <input type="checkbox" name="crime" value="Crime" > Crime<br>
+        <input type="checkbox" name="mystery" value="Mystery" > Mystery<br>
+        <input type="checkbox" name="drama" value="Drama" > Drama<br>
+        <input type="checkbox" name="musical" value="Musical" > Musical<br>
+      </div>
+      <div class="ratings_filter">
+        <h4>RATINGS</h4>
+        <input type="range" min="1.0" max="10.0" value="5.0" class="slider" id="ratings_range">
+        <p>Value: <span id="rating_value"></span></p>
+      </div>
+      <div class="lang_filter">
+        <h4>LANGUAGE  </h4>
+        <input type="checkbox" name="english" value="English" > English<br>
+        <input type="checkbox" name="russian" value="Russian" > Russian<br>
+        <input type="checkbox" name="hindi" value="Hindi" > Hindi<br>
+        <input type="checkbox" name="spanish" value="Spanish" > Spanish<br>
+        <input type="checkbox" name="french" value="French" > French<br>
+        <input type="checkbox" name="japanese" value="Japanese" > Japanese<br>
+        <input type="checkbox" name="greenlandic" value="Greenlandic" > Greenlandic<br>
+        <input type="checkbox" name="bengali" value="Bengali" > Bengali<br>
+      </div>
+      <div class="director_filter">
+        <h4>DIRECTOR</h4>
+        <input type="checkbox" name="price" value="price" > Price</input>
+      </div>
+      <div class="actor_filter">
+        <h4>ACTORS</h4>
+      </div>
+      <div class="year_filter">
+        <h4>YEAR</h4>
+        <input type="range" min="1800" max="2019" value="2018" class="slider" id="year_range">
+        <p>Value: <span id="year_value"></span></p>
+      </div>
+      <h3> SORT BY <span class="glyphicon glyphicon-sort filter_icon"></span></h3>
+      <div class="sort_by">
+        <input type="checkbox" name="price_ascend" value="price_ascend" > Price Low to High</input><br>
+        <input type="checkbox" name="price_descend" value="price_descend" > Price High to Low</input><br>
+        <input type="checkbox" name="rating_ascend" value="rating_ascend" > Rating Low to High</input><br>
+        <input type="checkbox" name="rating_descend" value="rating_descend" > Rating High to Low</input><br>
+        <input type="checkbox" name="title_ascend" value="title_ascend" > Title A-Z</input><br>
+        <input type="checkbox" name="title_descend" value="title_descend" > Title Z-A</input><br>
+        <input type="checkbox" name="year_ascend" value="year_ascend" > Year Low to High</input><br>
+        <input type="checkbox" name="year_descend" value="year_descend" > Year High to Low</input><br>
+      </div>
+      </div>
+      <!-- right movies content panel-->
+      <div class="col-sm-10 right_pane">
+      </div>
+    </div>
+        <!-- The Modal for know_more btn -->
   <div class="modal" id="myModal">
     <div class="modal-dialog">
       <div class="modal-content">
 
-        <!-- Modal Header -->
+        <!-- Modal Header for know_more btn  -->
         <div class="modal-header">
           <h2 class="modal-title">Title</h2>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        <!-- Modal body -->
+        <!-- Modal body for know_more btn  -->
         <div class="modal-body row">
             <div class="col-sm-4 left_col ">
               <img src="images/clapper_login.png" alt="movie_image" style="width: 100%;border-radius: 20px;"/>
-              <p> <b>PRICE : </b> 0$ </p>
-              <p> <b>STOCK : </b> 10 </p>
+              <p><b>PRICE : </b> <span id="price_modal">0$</span> </p>
+             <p><b>STOCK : </b><span id="stock_modal"> 10 </span></p>
               <button type="button" id="addToCart" class="addToCart_btn">ADD TO CART</button>
             </div>
             <div class="col-sm-8 right_col">
               <table class="modal_desc">
-                <tr><th>Genre : </th><td>Action, Thriller</td></tr>
-                <tr><th>Released : </th><td>20 Jul 2012</td></tr>
-                <tr><th>Rated : </th><td>PG-13</td></tr>
-                <tr><th>Director : </th><td>Christopher Nolan</td></tr>
-                <tr><th>Writer : </th><td>Jonathan Nolan (screenplay), Christopher Nolan (screenplay), Christopher Nolan (story), David S. Goyer (story), Bob Kane (characters)</td></tr>
-                <tr><th>Actors : </th><td>Christian Bale, Gary Oldman, Tom Hardy, Joseph Gordon-Levitt</td></tr>
-                <tr><th>Plot : </th><td>Eight years after the Joker's reign of anarchy, Batman, with the help of the enigmatic Catwoman, is forced from his exile to save Gotham City, now on the edge of total annihilation, from the brutal guerrilla terrorist Bane.</td></tr>
-                <tr><th>Runtime : </th><td>164 min</td></tr>
-                <tr><th>Ratings : </th><td>8.4</td></tr>
-                <tr><th>Language : </th><td>English, Arabic</td></tr>
-                <tr><th>Country : </th><td>UK, USA</td></tr>
-                <tr><th>Awards : </th><td>Nominated for 1 BAFTA Film Award. Another 38 wins & 102 nominations.</td></tr>
-                <tr><th>Production : </th><td>Warner Bros. Pictures</td></tr>
-                <tr><th>BoxOffice : </th><td>$448,130,642</td></tr>
-                <tr><th>Website : </th><td><a href="http://www.thedarkknightrises.com/">http://www.thedarkknightrises.com/</a></td></tr>
+                <tr><th>Genre : </th><td id="genre">Action, Thriller</td></tr>
+                <tr><th>Released : </th><td id="released">20 Jul 2012</td></tr>
+                <tr><th>Rated : </th><td id="rated">PG-13</td></tr>
+                <tr><th>Director : </th><td id ="director">Christopher Nolan</td></tr>
+                <tr><th>Writer : </th><td id="writer">Jonathan Nolan (screenplay), Christopher Nolan (screenplay), Christopher Nolan (story), David S. Goyer (story), Bob Kane (characters)</td></tr>
+                <tr><th>Actors : </th><td id="actor">Christian Bale, Gary Oldman, Tom Hardy, Joseph Gordon-Levitt</td></tr>
+                <tr><th>Plot : </th><td id="plot">Eight years after the Joker's reign of anarchy, Batman, with the help of the enigmatic Catwoman, is forced from his exile to save Gotham City, now on the edge of total annihilation, from the brutal guerrilla terrorist Bane.</td></tr>
+                <tr><th>Runtime : </th><td id="runtime">164 min</td></tr>
+                <tr><th>Ratings : </th><td id="ratings">8.4</td></tr>
+                <tr><th>Language : </th><td id="language">English, Arabic</td></tr>
+                <tr><th>Country : </th><td id="country">UK, USA</td></tr>
+                <tr><th>Awards : </th><td id="awards">Nominated for 1 BAFTA Film Award. Another 38 wins & 102 nominations.</td></tr>
+                <tr><th>Production : </th><td id="production">Warner Bros. Pictures</td></tr>
+                <tr><th>BoxOffice : </th><td id="boxOffice">$448,130,642</td></tr>
+                <tr><th>Website : </th><td id="website"><a href="http://www.thedarkknightrises.com/">http://www.thedarkknightrises.com/</a></td></tr>
               </table>
             </div>
-            <!--
-
-	"BoxOffice": "$448,130,642",
-	"Production": "Warner Bros. Pictures",
-	"Website": "http://www.thedarkknightrises.com/"-->
         </div>
-
-        <!-- Modal footer -->
+        <!-- Modal footer for know_more btn -->
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
@@ -163,8 +162,32 @@
     </div>
   </div>
 
+        <!--Modal for cart-->
+        <!-- Modal -->
+  <div class="modal fade" id="myCart" role="dialog">
+    <div class="modal-dialog_cart">
+      <!-- Modal content-->
+      <div class="cart-content">
+        <div class="cart-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="cart-title">Modal Header</h4>
+        </div>
+        <div class="cart-body">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="cart-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      <!--cart end-->
+    </div>
+  </div>
+
 <div class="row">
-  <p class="page">Page <span id="page1">1</span> of <span id="page2">50</span></p>
+  <p class="page">
+    Page <span id="page1">1</span> of <span id="page2">50</span>
+    <a href="#" id="next">Next..</a>
+  </p>
 </div>
 </div><!--container-->
 
