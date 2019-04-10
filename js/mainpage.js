@@ -1,8 +1,14 @@
 $(document).ready(function() {
     var main_url = window.location.protocol + "//" + window.location.host;
+    var user = null;
+    var movie_fields = ["Genre", "Released", "Rated", "Director", "Writer", "Actors", "Plot", "Runtime", "Ratings", "Language", "Country", "Awards", "Production", "BoxOffice", "Website"];
 
     /*-------------------- Entry point for scripts on page --------------------*/
     var initMainPage = function(){
+        if(typeof(sessionStorage) != 'undefined' && sessionStorage.getItem("customer")){
+            user = JSON.parse(sessionStorage.getItem("customer"));
+        }
+
         loadMovies(null);
         addEventListeners();
     };
@@ -37,12 +43,28 @@ $(document).ready(function() {
             $(".filter_content").toggle();
         });
 
+        cartListeners();
+        logoutListener();
+    };
+
+    var cartListeners = function(){
         //cart
-        $("#cart_icon").on('click', function(){
-            $(".cart_modal").show();
+        $('#cart-popover').popover({
+            html : true,
+            container: 'body',
+            content:function(){
+                return $('#popover_content_wrapper').html();
+            }
         });
 
-        logoutListener();
+        $('body').on('click', function (e) {
+            $('[data-toggle=popover]').each(function () {
+                // hide any open popovers when the anywhere else in the body is clicked
+                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                    $(this).popover('hide');
+                }
+            });
+        });//cart end
     };
 
     /*-------------------- Logout button listener --------------------*/
@@ -75,10 +97,11 @@ $(document).ready(function() {
             url: url,
             dataType: "json",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({"search_str" : search}),//passing the search string to db
+            data: JSON.stringify({"search" : search}),
             success: function(response){
 
                 if(!response || response.length == 0){
+                    $(".container").find(".right_pane").append("<div>No results found. Try using different criteria.</div>")
                     return;
                 }
 
@@ -89,10 +112,10 @@ $(document).ready(function() {
                                         '<img src="images/' + movie._id + '.jpg" alt="movie_image" class="movie_images"/>' +
                                         '</div>' +
                                         '<div class="row description">' +
-                                        '<div class="row1"><h3>' + movie.Title.toUpperCase() + '</h3>'+
+                                        '<div class="row1"><h3 data-id="' + movie._id + '">' + movie.Title.toUpperCase() + '</h3>'+
                                         '<p class="desc"><b>GENRE : </b>' + movie.Genre.join(", ") + '</p>'+
-                                        '<p class="desc"><b>RATING : </b>' + movie.Ratings + '</p>'+
-                                        '<p class="desc"><b>PRICE : </b>' + movie.Price + '</p></div>'+
+                                        '<p class="desc"><b>RATING : </b>' + movie.Ratings.toFixed(2) + '</p>'+
+                                        '<p class="desc"><b>PRICE : </b>$' + movie.Price.toFixed(2) + '</p></div>'+
                                         '<div class="col-sm-12" style="margin: 3% 0;">'+
                                         '<button type="button" class="btn btn-primary" id="know_more" data-toggle="modal" data-target="#myModal">KNOW MORE...</button></div>'+
                                         '<div class="col-sm-12" style="margin: 3% 0;">'+
@@ -104,34 +127,34 @@ $(document).ready(function() {
                 //fetching and displaying values in the modal box on clicking know more button
                 $(".description").find("#know_more").each(function(){
                     $(this).on('click', function(){
-                        var title= $(this).parent().parent().find(".row1").find("h3").text().toLowerCase();
+                        var id = $(this).parent().parent().find(".row1").find("h3").attr("data-id");
 
-                        $.each(response, function(i,movie){
-                            console.log(movie.Title.toLowerCase() , title);
-                            if(movie.Title.toLowerCase()==title){
-
+                        $.each(response, function(i, movie){
+                            if(movie._id == id) {
                                 $(".modal-header").find("h2").text(movie.Title);
                                 var modal_left_data= $(".modal-body").find(".left_col");
-                                modal_left_data.find("img").attr("src","images/"+movie._id+".jpg");
-                                modal_left_data.find("p").find("#price_modal").text(movie.Price);
+                                modal_left_data.find("img").attr("src","images/" + movie._id + ".jpg");
+                                modal_left_data.find("p").find("#price_modal").text("$" + movie.Price.toFixed(2));
                                 modal_left_data.find("p").find("#stock_modal").text(movie.Stock);
-                                var td=$(".modal-body").find(".right_col").find(".modal_desc");
-                                td.find("#genre").text(movie.Genre);
-                                td.find("#released").text(movie.Released);
-                                td.find("#rated").text(movie.Rated);
-                                td.find("#director").text(movie.Director );
-                                td.find("#writer").text(movie.Writer);
-                                td.find("#actor").text(movie.Actors);
-                                td.find("#plot").text(movie.Plot);
-                                td.find("#runtime").text(movie.Runtime);
-                                td.find("#ratings").text("N/A");
-                                td.find("#language").text(movie.Language);
-                                td.find("#country").text(movie.Country);
-                                td.find("#awards").text(movie.Awards);
-                                td.find("#production").text(movie.Production);
-                                td.find("#boxOffice").text(movie.BoxOffice);
-                                td.find("#website").text(movie.Website);
-                                td.find("a").attr("href", movie.Website);
+                                var td_content = $("<tbody></tbody>");
+
+                                $.each(movie_fields, function(index, field){
+                                    if(!movie[field] || movie[field] == "" || ($.isArray(movie[field]) && movie[field].length == 0)){
+                                        return;
+                                    }
+
+                                    if($.isArray(movie[field])) {
+                                        td_content.append('<tr><th>' + field + ' : </th><td>' + movie[field].join(", ") + '</td></tr>');
+                                    }
+                                    else if(field == "Website") {
+                                        td_content.append('<tr><th>' + field + ' : </th><td><a target="_blank" href="' + movie[field] + '">' + movie[field] + '</td></tr>');
+                                    }
+                                    else {
+                                        td_content.append('<tr><th>' + field + ' : </th><td>' + movie[field] + '</td></tr>');
+                                    }
+                                });
+
+                                $(".modal-body").find(".right_col").find(".modal_desc").empty().append(td_content);
                             }
                         });
                     });
