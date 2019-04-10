@@ -98,7 +98,8 @@ router.post('/login', function(request, response, next) {
     }
 
     var query = { "email": customerEmail };
-    dbUtil.getDb().collection("customer").findOne(query, function(error, result) {
+    var options = { "projection": { "transactions": 0, "cart": 0 } };
+    dbUtil.getDb().collection("customer").findOne(query, options, function(error, result) {
         if (error) {
             response.status(500).json({"error": error.message});
             return;
@@ -118,7 +119,8 @@ router.post('/login', function(request, response, next) {
             if(res){
                 request.session.user = result.email;
                 request.session.role = result.role;
-                response.status(200).json({"success": true});
+                delete result.password;
+                response.status(200).json({"success": true, "customer": result});
             }
             else{
                 response.status(200).json({"success": false});

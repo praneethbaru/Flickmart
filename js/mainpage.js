@@ -3,7 +3,6 @@ $(document).ready(function() {
     // to display movies data from the db
     var url1 = main_url + "/movies/getmovies";
 
-
     /*-------------------- Entry point for scripts on page --------------------*/
 
     var initMainPage = function(){
@@ -31,10 +30,12 @@ $(document).ready(function() {
                 url: url,
                 dataType: "json",
                 success: function(response){
+                    sessionStorage.clear();
                     window.location = main_url + "/index";
                 },
                 error: function(response){
                     console.log("Error occured: " + response.responseText);
+                    sessionStorage.clear();
                     window.location = main_url + "/index";
                 }
             });
