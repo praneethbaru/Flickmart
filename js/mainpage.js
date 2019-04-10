@@ -6,18 +6,6 @@ $(document).ready(function() {
     // to display movies data from the db
     var url1 = main_url + "/movies/getmovies";
 
-    $.ajax({
-        type: "POST",
-        url: main_url + "/customer/login",
-        dataType: "json",
-        success: function(response){
-            console.log(response);
-        },
-        error: function(response){
-            console.log("Error occured: " + response.responseText);
-            //window.location = main_url + "/index";
-        }
-    });
 
 
     /*-------------------- Entry point for scripts on page --------------------*/
@@ -47,10 +35,12 @@ $(document).ready(function() {
                 url: url,
                 dataType: "json",
                 success: function(response){
+                    sessionStorage.clear();
                     window.location = main_url + "/index";
                 },
                 error: function(response){
                     console.log("Error occured: " + response.responseText);
+                    sessionStorage.clear();
                     window.location = main_url + "/index";
                 }
             });

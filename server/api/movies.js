@@ -18,7 +18,6 @@ router.post('/getmovies', function(request, response, next) {
   }
 dbUtil.getDb().collection("movies").find(query).toArray(function(error, result){
   if (error) {
-      console.log("not found");
       response.status(500).json({"error here": error.message});
       return;
   }

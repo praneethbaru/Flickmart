@@ -288,8 +288,9 @@ $(document).ready(function() {
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({"email": $("#email").val(), "password": $("#password").val()}),
             success: function(response){
-                if(response && response.success){
+                if(response && response.success && response.customer){
                     $("#login_fail").hide();
+                    sessionStorage.setItem("customer", JSON.stringify(response.customer));
                     window.location = main_url + "/mainpage";
                 }
                 else{
