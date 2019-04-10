@@ -1,7 +1,23 @@
 $(document).ready(function() {
+
+
+
     var main_url = window.location.protocol + "//" + window.location.host;
     // to display movies data from the db
     var url1 = main_url + "/movies/getmovies";
+
+    $.ajax({
+        type: "POST",
+        url: main_url + "/customer/login",
+        dataType: "json",
+        success: function(response){
+            console.log(response);
+        },
+        error: function(response){
+            console.log("Error occured: " + response.responseText);
+            //window.location = main_url + "/index";
+        }
+    });
 
 
     /*-------------------- Entry point for scripts on page --------------------*/
@@ -58,7 +74,7 @@ $(document).ready(function() {
                       '<img src="images/'+movie._id+'.jpg" alt="movie_image" class="movie_images"/>'+
                       '</div>'+
                       '<div class="row description">'+
-                      '<div class="row1"><h3>'+movie.Title.toUpperCase()+'</h3>'+
+                      '<h3>'+movie.Title.toUpperCase()+'</h3><div class="row1">'+
                       '<p class="desc"><b>GENRE : </b>'+movie.Genre+'</p>'+
                       '<p class="desc"><b>RATING : </b>'+movie.Ratings[0].Value+'</p>'+
                       '<p class="desc"><b>PRICE : </b>'+movie.Price+'</p></div>'+
@@ -127,9 +143,25 @@ $(document).ready(function() {
     });
 
     //cart
-    $("#cart_icon").on('click', function(){
-      $(".cart_modal").show();
+    $('#cart-popover').popover({
+        html : true,
+        container: 'body',
+        content:function(){
+        return $('#popover_content_wrapper').html();
+    }
     });
+
+    $('body').on('click', function (e) {
+    $('[data-toggle=popover]').each(function () {
+        // hide any open popovers when the anywhere else in the body is clicked
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            $(this).popover('hide');
+        }
+    });
+});//cart end
+
+
+
     initMainPage();
 
 

@@ -61,16 +61,27 @@ color: white;
   color: white;
 font-size: 25px;
 float: right;
+padding: 17%;
+}
+
+.cart_icon{
+  color: white;
+font-size: 25px;
+float: right;
 padding: 5%;
 }
+
 #logout_button{
   color: white;
-font-size: 135%;
-float: right;
+  font-size: 179%;
+  font-weight: 600;
+  float: right;
   margin: 8%;
+  text-decoration: none;
 }
 
 /* card modal*/
+/*
 .modal-dialog_cart{
   padding: 20px;
 
@@ -81,9 +92,64 @@ float: right;
 background: white;
 color: black;
 }
+*/
 
+.no_of_items{
+  color: white;
+float: right;
+padding-right: 15px;
+position: absolute;
+margin-left: 30%;
+font-size: 110%;
+font-weight: 600;
+}
+.cart{
+    margin-top: 0px;
+}
+div.arrow{
+  left:56%;
+}
+.popover {
+  max-width: 1050px;
+  left: -360px;
+  width: 750px;
 
+}
+
+.popover-title {
+  color: black;
+  font-size: 20px;
+}
+
+.popover.fade.bottom.in {
+  left:-375.049px
+}
+
+.btn-primary, .btn-primary:hover {
+    background-color: black;
+    border-color: black;
+}
+
+.btn-default, .btn-default:hover {
+    background-color: indianred;
+    border-color: indianred;
+    color:white;
+}
+table th{
+color:black;
+font-size: 120%;
+}
 /*cart end*/
+
+
+
+
+
+
+
+
+
+
 .card{
   text-align: center;
   -moz-box-shadow:    3px 3px 5px 6px #ccc;
@@ -168,7 +234,7 @@ float: none;
   font-size: 110%;
 }
 .row1{
-
+text-align: left;
 }
 .desc {
   width: 75%;

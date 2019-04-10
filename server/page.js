@@ -11,7 +11,6 @@ router.get('/index', function(request, response, next) {
         if(err){
             throw err;
         }
-
         response.writeHead(200, {'Content-Type': 'text/html'});
         response.write(data);
         response.end();
@@ -24,7 +23,6 @@ router.get('/mainpage', authUtil, function(request, response, next) {
         if(err){
             throw err;
         }
-
         response.writeHead(200, {'Content-Type': 'text/html'});
         response.write(data);
         response.end();

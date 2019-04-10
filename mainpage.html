@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
     <link rel="stylesheet" type="text/css" href="css/mainpage.css">
 
     <title>FlickMart</title>
@@ -40,17 +38,39 @@
                    <span class="glyphicon glyphicon-user user_icon"></span>
                   </a>
                 </div>
-                <div class="col-sm-2" >
-                  <a href="#">
-                    <span class="glyphicon glyphicon-shopping-cart user_icon" id="cart_icon" data-toggle="modal" data-target="#myCart"></span>
-                  </a>
+                <div class="col-sm-2 cart" >
+                    <span class="no_of_items">0</span>
+                     <a id="cart-popover" class="btn" data-toggle="popover" data-placement="bottom" title="Shopping Cart">
+                    <span class="glyphicon glyphicon-shopping-cart user_icon" id="cart_icon" data-toggle="modal">
+                      <a href="#" data-toggle="popover" title="Popover Header" data-target="#myCart" data-placement="bottom" data-content="Some content inside the popover" class="cart"></a></span>
+                    </a>
                </div>
-
                  <div class="col-sm-4"><a id="logout_button" href="#">Logout</a></div>
                </div>
             </li>
         </ul>
     </nav>
+
+  <div id="popover_content_wrapper" style="display: none">
+  <div id="cart_details" class="table-responsive">
+    <table class="table table-bordered">
+      <tr>
+        <th> Movie Title </th>
+        <th> Quantity </th>
+        <th> Price </th>
+        <th> Action </th>
+      </tr>
+    </table>
+  </div>
+  <div align="right">
+  <a href="#" class="btn btn-primary" id="check_out_cart">
+  <span class="glyphicon glyphicon-shopping-cart"></span> Check out
+  </a>
+  <a href="#" class="btn btn-default" id="clear_cart">
+  <span class="glyphicon glyphicon-trash"></span> Clear
+  </a>
+ </div>
+</div>
 
     <!-- Body -->
     <div class="container row">
@@ -72,9 +92,12 @@
         <input type="checkbox" name="musical" value="Musical" > Musical<br>
       </div>
       <div class="ratings_filter">
-        <h4>RATINGS</h4>
-        <input type="range" min="1.0" max="10.0" value="5.0" class="slider" id="ratings_range">
-        <p>Value: <span id="rating_value"></span></p>
+        <h4>RATED</h4>
+        <input type="checkbox" name="G" value="G" > G<br>
+        <input type="checkbox" name="PG" value="PG" > PG<br>
+        <input type="checkbox" name="PG-13" value="PG-13" > PG-13<br>
+        <input type="checkbox" name="R" value="R" > R<br>
+        <input type="checkbox" name="X" value="X" > X<br>
       </div>
       <div class="lang_filter">
         <h4>LANGUAGE  </h4>
@@ -87,18 +110,7 @@
         <input type="checkbox" name="greenlandic" value="Greenlandic" > Greenlandic<br>
         <input type="checkbox" name="bengali" value="Bengali" > Bengali<br>
       </div>
-      <div class="director_filter">
-        <h4>DIRECTOR</h4>
-        <input type="checkbox" name="price" value="price" > Price</input>
-      </div>
-      <div class="actor_filter">
-        <h4>ACTORS</h4>
-      </div>
-      <div class="year_filter">
-        <h4>YEAR</h4>
-        <input type="range" min="1800" max="2019" value="2018" class="slider" id="year_range">
-        <p>Value: <span id="year_value"></span></p>
-      </div>
+
       <h3> SORT BY <span class="glyphicon glyphicon-sort filter_icon"></span></h3>
       <div class="sort_by">
         <input type="checkbox" name="price_ascend" value="price_ascend" > Price Low to High</input><br>
@@ -164,9 +176,10 @@
 
         <!--Modal for cart-->
         <!-- Modal -->
+        <!--
   <div class="modal fade" id="myCart" role="dialog">
     <div class="modal-dialog_cart">
-      <!-- Modal content-->
+
       <div class="cart-content">
         <div class="cart-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -179,10 +192,9 @@
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
-      <!--cart end-->
     </div>
   </div>
-
+-->
 <div class="row">
   <p class="page">
     Page <span id="page1">1</span> of <span id="page2">50</span>
@@ -192,7 +204,10 @@
 </div><!--container-->
 
     <!-- Scripts -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
     <script src="js/mainpage.js"></script>
 </body>
 
