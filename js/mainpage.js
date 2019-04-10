@@ -5,6 +5,8 @@ $(document).ready(function() {
     var main_url = window.location.protocol + "//" + window.location.host;
     // to display movies data from the db
     var url1 = main_url + "/movies/getmovies";
+    var userId=JSON.parse(sessionStorage.getItem("customer"))._id;
+    console.log();
 
 
 
@@ -79,12 +81,12 @@ $(document).ready(function() {
                     //fetching and displaying values in the modal box on clicking knowmore button
                     $(".description").find("#know_more").each(function(){
                       $(this).on('click', function(){
-                        var title= $(this).parent().parent().find(".row1").find("h3").text().toLowerCase();
+                        var title= $(this).parent().parent().find("h3").text().toLowerCase();
 
                         $.each(response, function(i,movie){
-                          console.log(movie.Title.toLowerCase() , title);
+                          //console.log(movie.Title.toLowerCase() , title);
                           if(movie.Title.toLowerCase()==title){
-                            console.log(movie.Title);
+                            //console.log(movie.Title);
                             $(".modal-header").find("h2").text(movie.Title);
                             var modal_left_data= $(".modal-body").find(".left_col");
                             modal_left_data.find("img").attr("src","images/"+movie._id+".jpg");
@@ -111,6 +113,20 @@ $(document).ready(function() {
                         });//each
                       });//onclick
                     });//know more close
+
+                    $(".description").find("#addToCart").each(function(){
+                      $(this).on('click', function(){
+                        var title= $(this).parent().parent().find("h3").text().toLowerCase();
+
+                        $.each(response, function(i,movie){
+                         // console.log(movie.Title.toLowerCase() , title);
+                          if(movie.Title.toLowerCase()==title){
+                            console.log(movie.Title);
+
+                          }//if
+                        });//each
+                      });//onclick
+                  });//cart close
                   },
                   error: function(response){
                   }
