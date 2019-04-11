@@ -102,7 +102,7 @@ $(document).ready(function() {
             success: function(response){
 
                 if(!response || response.length == 0){
-                    $(".container").find(".right_pane").append("<div>No results found. Try using different criteria.</div>")
+                    $(".container").find(".right_pane").append("<div>No results found. Try using different criteria.</div>");
                     return;
                 }
                 var a =0;
@@ -239,6 +239,7 @@ $(document).ready(function() {
             },
             error: function(response){
                 console.log("Error occured: " + response.responseText);
+                $(".container").find(".right_pane").append("<div>Error occurred. Could not fetch response.</div>");
             }
         });
     };
