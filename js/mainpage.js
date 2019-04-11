@@ -2,13 +2,14 @@ $(document).ready(function() {
     var main_url = window.location.protocol + "//" + window.location.host;
     var user = null;
     var movie_fields = ["Genre", "Released", "Rated", "Director", "Writer", "Actors", "Plot", "Runtime", "Ratings", "Language", "Country", "Awards", "Production", "BoxOffice", "Website"];
-
+    var movie_item = {};
+    var cart=[];
     /*-------------------- Entry point for scripts on page --------------------*/
     var initMainPage = function(){
         if(typeof(sessionStorage) != 'undefined' && sessionStorage.getItem("customer")){
             user = JSON.parse(sessionStorage.getItem("customer"));
         }
-
+        //console.log(user);
         loadMovies(null);
         addEventListeners();
     };
@@ -104,7 +105,9 @@ $(document).ready(function() {
                     $(".container").find(".right_pane").append("<div>No results found. Try using different criteria.</div>")
                     return;
                 }
-
+                var a =0;
+                var b=1;
+                var c=15;
                 //append html card content to display movie data
                 $.each(response,function(i, movie){
                     var html_content = '<div class="col-sm-3 card">' +
@@ -122,8 +125,8 @@ $(document).ready(function() {
                                         '<button type="button" id="addToCart">ADD TO CART</button></div></div></div>';
 
                     $(".container").find(".right_pane").append(html_content);
-                });
 
+                });
                 //fetching and displaying values in the modal box on clicking know more button
                 $(".description").find("#know_more").each(function(){
                     $(this).on('click', function(){
@@ -159,6 +162,80 @@ $(document).ready(function() {
                         });
                     });
                 });
+
+                //fetching and displaying values in the modal box on clicking addToCart button and store in db
+                $(".description").find("#addToCart").each(function(){
+                    $(this).on('click', function(){
+                        var id = $(this).parent().parent().find(".row1").find("h3").attr("data-id");
+                        $.each(response, function(i, movie){
+                            if(movie._id == id) {
+                                //if cart is empty add the element with quantity 1
+                                if(cart.length == 0)
+                                {
+                                    movie_item["id"]=movie._id;
+                                    movie_item["quantity"]=1;
+                                    //movie_item.count=1;
+                                    cart.push(movie_item);
+                                    //console.log(JSON.stringify(cart));
+                                }
+                                //if cart is not empty and if item is laready in the cart
+                                else
+                                {
+                                    var cart_item_already_exists = false;
+                                    var rep_id;
+                                    //check if the movie already exists
+                                    $.each(cart, function(j, item){
+                                        if(item.id == movie._id){
+                                            cart_item_already_exists = true;
+                                            rep_id = j;
+                                            return false;
+                                        }
+                                        else {
+                                            cart_item_already_exists = false;
+                                            return true;
+                                        }
+                                    });
+                                    //if item exists update cart quantity
+                                    if(cart_item_already_exists){
+                                        cart[rep_id].quantity++;
+                                        //console.log(JSON.stringify(cart));
+                                        //cart[rep_id].count++;
+                                    }
+                                    //if item is not in the cart add to cart
+                                    else {
+                                        movie_item = {};
+                                        movie_item["id"]=movie._id;
+                                        movie_item["quantity"]=1;
+                                        //movie_item.count=1;
+
+                                        cart.push(movie_item);
+                                        //console.log(cart);
+                                    }
+                                }
+
+                            }//movie match close
+                        });
+
+
+                    $.ajax({
+                        type: "POST",
+                        url: main_url + "/customer/insertcart",
+
+                        data: JSON.stringify({"customer_id": user._id, "cart" : cart}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function(response){
+
+                        console.log("The response is "+response.responseText);
+                        },
+                        error: function(response){
+                        console.log("Error occured: " + response.responseText);
+
+                        }
+                    });
+                        //console.log(JSON.parse(JSON.stringify(cart)).length);
+                    });//click close
+                });//addToCart close
             },
             error: function(response){
                 console.log("Error occured: " + response.responseText);

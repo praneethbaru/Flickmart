@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const dbUtil = require('./../mongoDbUtil');
 const auth = require('./../authUtil');
+const ObjectId = require('mongodb').ObjectId;
 
 // Get movies with id endpoint
 router.post('/getmovies', auth, function(request, response, next) {
@@ -11,6 +12,7 @@ router.post('/getmovies', auth, function(request, response, next) {
 
     // query to display search results if search string is not null
     if(request.body.search) {
+        console.log(request.body.search);
         query = { $text : { $search : request.body.search } };
     }
 
@@ -22,5 +24,6 @@ router.post('/getmovies', auth, function(request, response, next) {
         response.status(200).json(result);
     });
 });
+
 
 module.exports = router;

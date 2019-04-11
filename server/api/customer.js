@@ -129,6 +129,28 @@ router.post('/login', function(request, response, next) {
     });
 });
 
+
+//add items to cart in customer collection
+router.post('/insertcart', authUtil, function(request, response, next) {
+    var cust_id= request.body.customer_id;
+    //console.log(cust_id);
+    var cart_items= request.body.cart;
+    //var id= cart_items[0].id
+    //console.log(id);
+    var query={ '_id' : ObjectId(cust_id)};
+    var newValue = { $set :{ 'cart' : cart_items}};
+    // query to display search results if search string is not null
+
+    dbUtil.getDb().collection("customer").updateOne(query, newValue, function(error, result) {
+        if (error) {
+            response.status(500).json({"error": error.message});
+            return;
+        }
+        //console.log("record added" + result + query + cust_id + cart_items.id);
+        response.status(200).json(result);
+    });
+
+});
 // Customer logout
 router.get('/terminate/logout', function(request, response, next) {
     if(request.session){
