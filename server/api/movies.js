@@ -3,28 +3,6 @@
 const express = require('express');
 const router = express.Router();
 const dbUtil = require('./../mongoDbUtil');
-<<<<<<< HEAD
-const authUtil = require('./../authUtil');
-//const ObjectId = require('mongodb').ObjectId;
-
-// Get movies with id endpoint
-router.post('/getmovies', function(request, response, next) {
-  var query={};
-  if(request.body.search_str != null){
-     query={$text : { $search : request.body.search_str }};
-  }
-  else{
-    query={};
-  }
-dbUtil.getDb().collection("movies").find(query).toArray(function(error, result){
-  if (error) {
-      console.log("not found");
-      response.status(500).json({"error here": error.message});
-      return;
-  }
-  response.status(200).json(result);
-  });
-=======
 const auth = require('./../authUtil');
 const ObjectId = require('mongodb').ObjectId;
 
@@ -167,8 +145,7 @@ router.post('/getmovies', auth, function(request, response, next) {
             });
         });
     });
->>>>>>> 3ad8e5022a84e174bfcec3b42f3eedaede93aeee
-});
 
+});
 
 module.exports = router;

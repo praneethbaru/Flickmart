@@ -1,0 +1,103 @@
+* {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+}
+body{
+  height: 100%;
+}
+td{
+  padding: 20px;
+}
+
+th{
+  padding: 0;
+}
+
+a:hover {
+  text-decoration: none;
+}
+h3{
+text-align: center;
+}
+.logo{
+  position: relative;
+width:25%;
+}
+
+.navbarStyle{
+  background-color: black;
+}
+.navbar-nav{
+  width: 100%;
+}
+.col3{
+  margin: 10% 0;
+color: white;
+}
+.user_icon{
+  color: white;
+font-size: 25px;
+float: right;
+padding: 17%;
+}
+
+.cart_icon{
+  color: white;
+font-size: 25px;
+float: right;
+padding: 5%;
+}
+
+#logout_button{
+  color: white;
+  font-size: 179%;
+  font-weight: 600;
+  float: right;
+  margin: 8%;
+  text-decoration: none;
+}
+.container{
+  width: 75%;
+  padding: 0;
+  margin: auto;
+
+}
+.row_container{
+  margin: 0;
+}
+.checkout_table{
+  width:100%;
+}
+.checkout_table tbody>tr>th{
+  padding: 2% 5%;
+  background-color: indianred;
+  color: white;
+  font-size: 130%;
+  font-weight: normal;
+}
+
+.checkout_table tbody>tr>td{
+  padding: 1% 5%;
+}
+
+.table-striped > tbody > tr:nth-child(2n+1) > td{
+   background-color: #ffa0a047;
+}
+.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+    border: 1px solid #fff;
+}
+
+#payment,#mainpage{
+  float: right;
+  padding: 1%;
+  margin: 0 2%;
+  background-color: indianred;
+  color: white;
+  font-size: 110%;
+  border: none;
+  font-weight: bold;
+}
+
+#payment:hover, #mainpage:hover{
+border: 2px solid indianred;
+}
