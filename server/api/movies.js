@@ -9,7 +9,6 @@ const authUtil = require('./../authUtil');
 // Get movies with id endpoint
 router.post('/getmovies', function(request, response, next) {
   var query={};
-  // query to display search results if search string is not null
   if(request.body.search_str != null){
      query={$text : { $search : request.body.search_str }};
   }
@@ -18,6 +17,7 @@ router.post('/getmovies', function(request, response, next) {
   }
 dbUtil.getDb().collection("movies").find(query).toArray(function(error, result){
   if (error) {
+      console.log("not found");
       response.status(500).json({"error here": error.message});
       return;
   }
