@@ -39,7 +39,7 @@
                   </a>
                 </div>
                 <div class="col-sm-2 cart" >
-                    <span class="no_of_items">0</span>
+                    <span class="no_of_items" >0</span>
                      <a id="cart-popover" class="btn" data-toggle="popover" data-placement="bottom" title="Shopping Cart">
                     <span class="glyphicon glyphicon-shopping-cart user_icon" id="cart_icon" data-toggle="modal">
                       <a href="#" data-toggle="popover" title="Popover Header" data-target="#myCart" data-placement="bottom" data-content="Some content inside the popover" class="cart"></a></span>
@@ -50,16 +50,11 @@
             </li>
         </ul>
     </nav>
-
+<!--cart popover-->
   <div id="popover_content_wrapper" style="display: none">
   <div id="cart_details" class="table-responsive">
-    <table class="table table-bordered">
-      <tr>
-        <th> Movie Title </th>
-        <th> Quantity </th>
-        <th> Price </th>
-        <th> Action </th>
-      </tr>
+    <table class="table table-bordered" id="cart_table">
+
     </table>
   </div>
   <div align="right">
@@ -73,7 +68,8 @@
 </div>
 
     <!-- Body -->
-    <div class="container row">
+  <div class="container">
+      <div class="row row_container">
       <!-- left filter panel-->
        <div class="col-sm-2 filter_pane">
         <h3>FILTER <span class="glyphicon glyphicon-filter filter_icon" id="filter"> </span></h3>
@@ -126,7 +122,8 @@
       <!-- right movies content panel-->
       <div class="col-sm-10 right_pane">
       </div>
-    </div>
+    </div><!--row-->
+
         <!-- The Modal for know_more btn -->
   <div class="modal" id="myModal">
     <div class="modal-dialog">
@@ -159,32 +156,14 @@
     </div>
   </div>
 
-        <!--Modal for cart-->
-        <!-- Modal -->
-        <!--
-  <div class="modal fade" id="myCart" role="dialog">
-    <div class="modal-dialog_cart">
-
-      <div class="cart-content">
-        <div class="cart-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="cart-title">Modal Header</h4>
-        </div>
-        <div class="cart-body">
-          <p>Some text in the modal.</p>
-        </div>
-        <div class="cart-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
--->
 <div class="row">
-  <p class="page">
-    Page <span id="page1">1</span> of <span id="page2">50</span>
-    <a href="#" id="next">Next..</a>
-  </p>
+  <div class="col-sm-12">
+    <p class="page">
+      Page <span id="page1">1</span> of <span id="page2">50</span>
+      <a href="#" id="next">Next..</a>
+    </p>
+  </div>
+
 </div>
 </div><!--container-->
 

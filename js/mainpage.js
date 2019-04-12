@@ -4,12 +4,19 @@ $(document).ready(function() {
     var movie_fields = ["Genre", "Released", "Rated", "Director", "Writer", "Actors", "Plot", "Runtime", "Ratings", "Language", "Country", "Awards", "Production", "BoxOffice", "Website"];
     var movie_item = {};
     var cart=[];
+    var newCart = [];
+    var count=0;
+    var user_cart=null;
     /*-------------------- Entry point for scripts on page --------------------*/
     var initMainPage = function(){
         if(typeof(sessionStorage) != 'undefined' && sessionStorage.getItem("customer")){
             user = JSON.parse(sessionStorage.getItem("customer"));
         }
-        //console.log(user);
+        var cart_head= '<tr><th> Movie Title </th><th> Quantity </th><th> Price </th><th> Action </th></tr>';
+        $("#cart_table").append(cart_head);
+        //console.log(user.cart);
+        user_cart=user.cart;
+        //cart.push(user_cart);
         loadMovies(null);
         addEventListeners();
     };
@@ -39,10 +46,6 @@ $(document).ready(function() {
             var value = $(this).val();
             $("#year_value").text(value);
         });
-        //filter drop down
-        $("#filter").on("click", function(){
-            $(".filter_content").toggle();
-        });
 
         cartListeners();
         logoutListener();
@@ -58,6 +61,39 @@ $(document).ready(function() {
             }
         });
 
+
+
+        //upon clicking clear
+        $(document).on("click", "#clear_cart", function() {
+            $.ajax({
+                type: "POST",
+                url: main_url + "/customer/deletecart",
+                data: JSON.stringify({"customer_id": user._id, "cart" : cart}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function(res){
+                    var cart_data;
+                    //console.log(res.success);
+                    if(res.success){
+
+                        $("#cart_table").empty();
+                        count=0;
+                        $(".no_of_items").text(count);
+                    }
+
+                },//success end
+                error: function(response){
+                console.log("Error occured: " + response.responseText);
+            }// error end
+            });//ajax end
+        });//click end
+
+        //checkout the cart
+        $(document).on("click", "#check_out_cart", function() {
+            alert("Checkout the cart ?");
+        });
+
+
         $('body').on('click', function (e) {
             $('[data-toggle=popover]').each(function () {
                 // hide any open popovers when the anywhere else in the body is clicked
@@ -66,6 +102,17 @@ $(document).ready(function() {
                 }
             });
         });//cart end
+
+        //$(".popover_content").find("#cart_table").find("tr").each(function(){
+            //$(this).on('click' , function(){
+                //console.log($("#popover_content_wrapper").find("#cart_details").find("#cart_table").html());
+            //})
+        //});
+
+
+
+
+
     };
 
     /*-------------------- Logout button listener --------------------*/
@@ -98,7 +145,7 @@ $(document).ready(function() {
             url: url,
             dataType: "json",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({"search" : search}),
+            data: JSON.stringify({"search" : search, "page": 1}),
             success: function(response){
 
                 if(!response || response.length == 0){
@@ -109,7 +156,7 @@ $(document).ready(function() {
                 var b=1;
                 var c=15;
                 //append html card content to display movie data
-                $.each(response,function(i, movie){
+                $.each(response.data,function(i, movie){
                     var html_content = '<div class="col-sm-3 card">' +
                                         '<div class="row">' +
                                         '<img src="images/' + movie._id + '.jpg" alt="movie_image" class="movie_images"/>' +
@@ -126,13 +173,33 @@ $(document).ready(function() {
 
                     $(".container").find(".right_pane").append(html_content);
 
+
+
+                });
+
+                $.each(user_cart, function(i, item){
+                    count=user_cart.length;
+                    $.each(response.data, function(i, movie){
+                        if(item.id==movie._id){
+                            //console.log(movie.Stock);
+                            cart_data='<tr id="tdata"> <td>'+movie.Title+'</td>'+
+                            '<td> <input type="number" name="quantity" min="1" max="'+movie.Stock+'" value='+item.quantity+'></td>'+
+                            '<td>'+movie.Price+'</td>'+
+                            '<td><a href="#" class="btn btn-default" id="delete_item">'+
+                            '<span class="glyphicon glyphicon-trash"></span> Delete</a></tr>';
+                            $(".no_of_items").text(count);
+                            $("#cart_table").append(cart_data);
+                            cart.push(item);
+                        }
+                    });
+                    //
                 });
                 //fetching and displaying values in the modal box on clicking know more button
                 $(".description").find("#know_more").each(function(){
                     $(this).on('click', function(){
                         var id = $(this).parent().parent().find(".row1").find("h3").attr("data-id");
 
-                        $.each(response, function(i, movie){
+                        $.each(response.data, function(i, movie){
                             if(movie._id == id) {
                                 $(".modal-header").find("h2").text(movie.Title);
                                 var modal_left_data= $(".modal-body").find(".left_col");
@@ -167,16 +234,15 @@ $(document).ready(function() {
                 $(".description").find("#addToCart").each(function(){
                     $(this).on('click', function(){
                         var id = $(this).parent().parent().find(".row1").find("h3").attr("data-id");
-                        $.each(response, function(i, movie){
+                        $.each(response.data, function(i, movie){
                             if(movie._id == id) {
                                 //if cart is empty add the element with quantity 1
                                 if(cart.length == 0)
                                 {
                                     movie_item["id"]=movie._id;
                                     movie_item["quantity"]=1;
-                                    //movie_item.count=1;
                                     cart.push(movie_item);
-                                    //console.log(JSON.stringify(cart));
+
                                 }
                                 //if cart is not empty and if item is laready in the cart
                                 else
@@ -198,8 +264,6 @@ $(document).ready(function() {
                                     //if item exists update cart quantity
                                     if(cart_item_already_exists){
                                         cart[rep_id].quantity++;
-                                        //console.log(JSON.stringify(cart));
-                                        //cart[rep_id].count++;
                                     }
                                     //if item is not in the cart add to cart
                                     else {
@@ -207,42 +271,120 @@ $(document).ready(function() {
                                         movie_item["id"]=movie._id;
                                         movie_item["quantity"]=1;
                                         //movie_item.count=1;
-
                                         cart.push(movie_item);
                                         //console.log(cart);
                                     }
                                 }
-
                             }//movie match close
                         });
 
-
+                        //ajax call to insert cart items in database and display in the cart popover
                     $.ajax({
                         type: "POST",
-                        url: main_url + "/customer/insertcart",
-
+                        url: main_url + "/customer/updatecart",
                         data: JSON.stringify({"customer_id": user._id, "cart" : cart}),
                         dataType: "json",
                         contentType: "application/json; charset=utf-8",
-                        success: function(response){
-
-                        console.log("The response is "+response.responseText);
-                        },
+                        success: function(res){
+                            var cart_data;
+                            $("#cart_table").empty();
+                            //add cart header
+                            var cart_head= '<tr><th> Movie Title </th><th> Quantity </th><th> Price </th><th> Action </th></tr>';
+                            $("#cart_table").append(cart_head);
+                            var obj = JSON.parse(JSON.stringify(res)).cart;
+                            //display items clicked in the cart popover
+                            $.each(obj, function(i, item){
+                                count=obj.length;
+                                $.each(response.data, function(i, movie){
+                                    if(item.id==movie._id){
+                                        //console.log(movie.Stock);
+                                        cart_data='<tr id="tdata"> <td>'+movie.Title+'</td>'+
+                                        '<td> <input type="number" name="quantity" min="1" max="'+movie.Stock+'" value='+item.quantity+'></td>'+
+                                        '<td>'+movie.Price+'</td>'+
+                                        '<td><a href="#" class="btn btn-default" id="delete_item">'+
+                                        '<span class="glyphicon glyphicon-trash"></span> Delete</a></tr>';
+                                        $(".no_of_items").text(count);
+                                        $("#cart_table").append(cart_data);
+                                    }
+                                });
+                                //
+                            });
+                        },//success
                         error: function(response){
                         console.log("Error occured: " + response.responseText);
 
                         }
                     });
-                        //console.log(JSON.parse(JSON.stringify(cart)).length);
                     });//click close
                 });//addToCart close
+
+                //upon clicking delete item
+                $(document).on("click", "#delete_item", function() {
+                    var delete_name= $(this).parent().parent().find("td:eq(0)").text();
+                    $.each(response.data, function(i, movie){
+                        if(movie.Title==delete_name){
+
+
+                            $.each(cart, function(i, item){
+                                if(item.id == movie._id)
+                                {
+
+                                }
+                                else
+                                newCart.push(item);
+
+                            });
+                            cart = newCart;
+                            //console.log(newCart);
+                            newCart = [];
+
+                            $.ajax({
+                                type: "POST",
+                                url: "customer/updatecart",
+                                data: JSON.stringify({"customer_id": user._id, "cart" : cart}),
+                                dataType: "json",
+                                contentType: "application/json; charset=utf-8",
+                                success: function(res){
+                                    //var cart_data;
+                                    $("#cart_table").empty();
+                                    //add cart header
+                                    var cart_head= '<tr><th> Movie Title </th><th> Quantity </th><th> Price </th><th> Action </th></tr>';
+                                    $("#cart_table").append(cart_head);
+                                    var obj = JSON.parse(JSON.stringify(res)).cart;
+                                    console.log(obj.cart);
+                                    //display items clicked in the cart popover
+                                    $.each(obj, function(i, item){
+                                        count=obj.length;
+                                        $.each(response.data, function(i, movie){
+                                            if(item.id==movie._id){
+
+                                                cart_data='<tr id="tdata"> <td>'+movie.Title+'</td>'+
+                                                '<td> <input type="number" name="quantity" min="1" max="'+movie.Stock+'" value='+item.quantity+'></td>'+
+                                                '<td>'+movie.Price+'</td>'+
+                                                '<td><a href="#" class="btn btn-default" id="delete_item">'+
+                                                '<span class="glyphicon glyphicon-trash"></span> Delete</a></tr>';
+                                                $(".no_of_items").text(count);
+                                                $("#cart_table").append(cart_data);
+                                            }
+                                        });
+                                        //
+                                    });
+
+                                },
+                                error: function(response){
+
+                                }
+                            });
+                        }
+                    });
+                });
             },
             error: function(response){
                 console.log("Error occured: " + response.responseText);
                 $(".container").find(".right_pane").append("<div>Error occurred. Could not fetch response.</div>");
             }
         });
-    };
+    };//loadMovies end
 
     initMainPage();
 });

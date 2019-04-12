@@ -98,7 +98,7 @@ router.post('/login', function(request, response, next) {
     }
 
     var query = { "email": customerEmail };
-    var options = { "projection": { "transactions": 0, "cart": 0 } };
+    var options = { "projection": { "transactions": 0 } };
     dbUtil.getDb().collection("customer").findOne(query, options, function(error, result) {
         if (error) {
             response.status(500).json({"error": error.message});
@@ -109,7 +109,7 @@ router.post('/login', function(request, response, next) {
             response.status(500).json({"error": "Customer not found."});
             return;
         }
-
+        console.log(result);
         bcrypt.compare(customerPassword, result.password, function(err, res) {
             if (err) {
                 response.status(500).json({"error": err.message});
@@ -131,12 +131,9 @@ router.post('/login', function(request, response, next) {
 
 
 //add items to cart in customer collection
-router.post('/insertcart', authUtil, function(request, response, next) {
+router.post('/updatecart', authUtil, function(request, response, next) {
     var cust_id= request.body.customer_id;
-    //console.log(cust_id);
     var cart_items= request.body.cart;
-    //var id= cart_items[0].id
-    //console.log(id);
     var query={ '_id' : ObjectId(cust_id)};
     var newValue = { $set :{ 'cart' : cart_items}};
     // query to display search results if search string is not null
@@ -146,11 +143,45 @@ router.post('/insertcart', authUtil, function(request, response, next) {
             response.status(500).json({"error": error.message});
             return;
         }
-        //console.log("record added" + result + query + cust_id + cart_items.id);
-        response.status(200).json(result);
-    });
+        if(result){
+            dbUtil.getDb().collection("customer").findOne(query ,function(err, res){
+                if (err) {
+                    response.status(500).json({"error": err.message});
+                    return;
+                }
 
+                response.status(200).json(res);
+            });
+        }
+    });
 });
+
+//delete items from cart collection
+router.post('/deletecart', authUtil, function(request, response, next) {
+    var cust_id= request.body.customer_id;
+    //var cart_items= request.body.cart;
+    var query={ '_id' : ObjectId(cust_id)};
+    var newValue = { $set :{ 'cart' : {} }};
+    // query to display search results if search string is not null
+    //get the movie_id
+    dbUtil.getDb().collection("customer").updateOne(query, newValue, function(error, result) {
+        if (error) {
+            response.status(500).json({"error": error.message});
+            return;
+        }
+        if(result){
+            dbUtil.getDb().collection("customer").findOne(query ,function(err, res){
+                if (err) {
+                    response.status(500).json({"error": err.message});
+                    return;
+                }
+
+                response.status(200).json({"success" : true});
+            });
+        }
+    });
+});
+
 // Customer logout
 router.get('/terminate/logout', function(request, response, next) {
     if(request.session){
