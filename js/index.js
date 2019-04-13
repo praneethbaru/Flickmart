@@ -238,7 +238,7 @@ $(document).ready(function() {
             "phone" : $("#phone").val(),
             "password" : $("#cpassword").val(),
             "role" : 1,
-            "cart" : {},
+            "cart" : [],
             "transactions" : []
         };
 
