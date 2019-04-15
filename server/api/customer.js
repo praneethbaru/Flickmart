@@ -7,6 +7,16 @@ const authUtil = require('./../authUtil');
 const bcrypt = require('bcrypt');
 const ObjectId = require('mongodb').ObjectId;
 
+// Returns index of found element from an array
+var getIndex = function(arr, element) {
+    for(var i = 0; i < arr.length; i++) {
+        if(arr[i].equals(element)) {
+            return i;
+        }
+    }
+    return -1;
+};
+
 // Get customers with id endpoint
 router.get('/:customerId', authUtil, function(request, response, next) {
     var customerId = request.params.customerId;
@@ -98,7 +108,7 @@ router.post('/login', function(request, response, next) {
     }
 
     var query = { "email": customerEmail };
-    var options = { "projection": { "transactions": 0 } };
+    var options = { "projection": { "cart": 0, "transactions": 0 } };
     dbUtil.getDb().collection("customer").findOne(query, options, function(error, result) {
         if (error) {
             response.status(500).json({"error": error.message});
@@ -109,7 +119,7 @@ router.post('/login', function(request, response, next) {
             response.status(500).json({"error": "Customer not found."});
             return;
         }
-        console.log(result);
+
         bcrypt.compare(customerPassword, result.password, function(err, res) {
             if (err) {
                 response.status(500).json({"error": err.message});
@@ -129,57 +139,181 @@ router.post('/login', function(request, response, next) {
     });
 });
 
-
-//add items to cart in customer collection
-router.post('/updatecart', authUtil, function(request, response, next) {
-    var cust_id= request.body.customer_id;
-    var cart_items= request.body.cart;
-    var query={ '_id' : ObjectId(cust_id)};
-    var newValue = { $set :{ 'cart' : cart_items}};
-    // query to display search results if search string is not null
-
-    dbUtil.getDb().collection("customer").updateOne(query, newValue, function(error, result) {
+// Gets cart info for customer
+var getCartInfoForUser = function(request, response, next, customerId) {
+    var query = { _id: ObjectId(customerId) };
+    dbUtil.getDb().collection("customer").findOne(query, { "projection": { "cart": 1 } }, function(error, result) {
         if (error) {
             response.status(500).json({"error": error.message});
             return;
         }
-        if(result){
-            dbUtil.getDb().collection("customer").findOne(query ,function(err, res){
-                if (err) {
-                    response.status(500).json({"error": err.message});
-                    return;
-                }
 
-                response.status(200).json(res);
-            });
+        if(!result || !result.cart || !result.cart.length) {
+            response.status(200).json(result);
+            return;
         }
+
+        var movieIds = [];
+        for(var i = 0; i < result.cart.length; i++) {
+            movieIds.push(ObjectId(result.cart[i].movieId));
+        }
+
+        dbUtil.getDb().collection("movies").find({ "_id": { $in: movieIds } }, { "projection": { "Title": 1, "Price": 1, "Stock": 1 } }).toArray(function(err, res) {
+            if (err) {
+                response.status(500).json({"error": err.message});
+                return;
+            }
+
+            if(!res || !res.length || movieIds.length != res.length) {
+                response.status(500).json({"error": "Unable to retrieve movie data."});
+                return;
+            }
+
+            res.sort(function(movie1, movie2) {
+                return getIndex(movieIds, movie1._id) - getIndex(movieIds, movie2._id);
+            });
+
+            for(var i = 0; i < res.length; i++) {
+                res[i]['Quantity'] = result.cart[i].quantity;
+            }
+
+            result.cart = res;
+
+            response.status(200).json(result);
+        });
+    });
+};
+
+// Get cart from user
+router.get('/getcart/:customerId', authUtil, function(request, response, next) {
+    var customerId = request.params.customerId;
+    if(customerId == null || !ObjectId.isValid(customerId)) {
+        response.status(500).json({
+            "error": "Customer id is invalid."
+        });
+        return;
+    }
+
+    getCartInfoForUser(request, response, next, customerId);
+});
+
+// Add/update items to cart in customer collection
+router.post('/updatecart', authUtil, function(request, response, next) {
+    var cust_id = request.body.customer_id;
+    var movie = request.body.movie;
+
+    if(!cust_id || !ObjectId.isValid(cust_id) || !movie || !movie.id || !ObjectId.isValid(movie.id) || !movie.quantity) {
+        response.status(500).json({"error": "Invalid movie or customer id."});
+        return;
+    }
+
+    dbUtil.getDb().collection("movies").findOneAndUpdate({ $and: [{ "_id": ObjectId(movie.id) }, { "Stock": { $gte: movie.quantity } }] }, { $inc: { "Stock": -movie.quantity } }, function(error, movieObj){
+        if (error) {
+            response.status(500).json({"error": error.message});
+            return;
+        }
+
+        if(!movieObj || !movieObj.value) {
+            response.status(200).json({"error": "Movie not found or stock less than required."});
+            return;
+        }
+
+        dbUtil.getDb().collection("customer").findOne({ $and: [{ "_id": ObjectId(cust_id) }, { "cart.movieId": ObjectId(movie.id) }] }, { "projection": { "cart": 1 } }, function(err, customerCart) {
+            if(err) {
+                response.status(500).json({"error": err.message});
+                return;
+            }
+
+            if(!customerCart) {
+                dbUtil.getDb().collection("customer").findOneAndUpdate({ "_id": ObjectId(cust_id) }, { $push: { "cart": { "movieId": ObjectId(movie.id), "quantity": movie.quantity } } }, function(er, result) {
+                    if(er) {
+                        response.status(500).json({"error": er.message});
+                        return;
+                    }
+
+                    if(!result || !result.value) {
+                        response.status(500).json({"error": "Failed to update cart."});
+                        return;
+                    }
+
+                    getCartInfoForUser(request, response, next, cust_id);
+                });
+            }
+            else {
+                dbUtil.getDb().collection("customer").findOneAndUpdate({ $and: [{ "_id": ObjectId(cust_id) }, { "cart.movieId": ObjectId(movie.id) }] }, { $inc: { "cart.$.quantity": movie.quantity } },  function(er, result) {
+                    if(er) {
+                        response.status(500).json({"error": er.message});
+                        return;
+                    }
+
+                    if(!result || !result.value) {
+                        response.status(500).json({"error": "Failed to update cart."});
+                        return;
+                    }
+
+                    getCartInfoForUser(request, response, next, cust_id);
+                });
+            }
+        });
     });
 });
 
-//delete items from cart collection
+// Delete items from cart collection
 router.post('/deletecart', authUtil, function(request, response, next) {
-    var cust_id= request.body.customer_id;
-    //var cart_items= request.body.cart;
-    var query={ '_id' : ObjectId(cust_id)};
-    var newValue = { $set :{ 'cart' : {} }};
-    // query to display search results if search string is not null
-    //get the movie_id
-    dbUtil.getDb().collection("customer").updateOne(query, newValue, function(error, result) {
-        if (error) {
-            response.status(500).json({"error": error.message});
-            return;
-        }
-        if(result){
-            dbUtil.getDb().collection("customer").findOne(query ,function(err, res){
-                if (err) {
+    var cust_id = request.body.customer_id;
+    var movies = request.body.movies;
+
+    if(!cust_id || !ObjectId.isValid(cust_id) || !movies || !movies.length) {
+        response.status(500).json({"error": "Invalid movies or customer id."});
+        return;
+    }
+
+    var operations = movies.map(function(movie){
+        return {
+                "updateOne": {
+                    "filter": { "_id": ObjectId(movie.id) },
+                    "update": { $inc: { "Stock": movie.quantity }
+                }
+            }
+        };
+    });
+
+    try {
+        dbUtil.getDb().collection("movies").bulkWrite(operations, function(error, result) {
+            if(error) {
+                response.status(500).json({"error": error.message});
+                return;
+            }
+
+            if(!result || result.modifiedCount != operations.length) {
+                response.status(500).json({"error": "Unable to update movie stocks."});
+                return;
+            }
+
+            var movieIds = movies.map(function(movie){
+                //return { "movieId": ObjectId(movie.id) };
+                return ObjectId(movie.id);
+            });
+
+            dbUtil.getDb().collection("customer").update({ "_id": ObjectId(cust_id) }, { $pull: { "cart": { "movieId": { $in: movieIds } } } }, function(err, custResult) {
+                if(err) {
                     response.status(500).json({"error": err.message});
                     return;
                 }
+                
+                if(!custResult || !custResult.result || custResult.result.nModified != 1){
+                    response.status(500).json({"error": "Error updating customer cart."});
+                    return;
+                }
 
-                response.status(200).json({"success" : true});
+                getCartInfoForUser(request, response, next, cust_id);
             });
-        }
-    });
+        });
+    }
+    catch(e) {
+        response.status(500).json({"error": e.message});
+        return;
+    }
 });
 
 // Customer logout

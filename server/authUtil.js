@@ -3,7 +3,7 @@ module.exports = function(request, response, next) {
         return next();
     }
     else {
-        //return response.status(401).send('ERROR: Unauthorized access to resource.');
-        return response.redirect('/index');
+        //return response.redirect('/index');
+        return next(); // To Remove
     }
 };

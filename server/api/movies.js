@@ -26,7 +26,7 @@ router.post('/getmovies', auth, function(request, response, next) {
             var filter_name = request.body.filters[i]['name'];
             var filter_values = request.body.filters[i]['values'];
             var filter_obj = {};
-            filter_obj[filter_name] = { $in: filter_values };
+            filter_obj[filter_name] = { $all: filter_values };
             query.push(filter_obj);
         }
     }
