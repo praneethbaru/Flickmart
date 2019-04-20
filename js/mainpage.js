@@ -11,12 +11,15 @@ $(document).ready(function() {
         if(typeof(sessionStorage) != 'undefined' && sessionStorage.getItem("customer")){
             user = JSON.parse(sessionStorage.getItem("customer"));
         }
+        else {
+            onLogoutButtonClick();
+        }
 
         loadMovies(null);
         addEventListeners();
 
         if(!user) {
-            $("#logout_button").trigger("click");
+            onLogoutButtonClick();
         }
         else {
             loadUserCart();
@@ -49,6 +52,8 @@ $(document).ready(function() {
         if(!response || !response.cart || !response.cart.length) {
             $("#cart_table tbody").empty().append('<tr><td colspan="4" class="center">No cart items found.</td></tr>');
             $(".no_of_items").text(0);
+            $(".popover-content #cart_footer").hide();
+            $("#cart_footer").hide();
         }
         else {
             $("#cart_table tbody").empty();
@@ -61,6 +66,8 @@ $(document).ready(function() {
                 $("#cart_table tbody").append(cart_data);
             });
             $(".no_of_items").text(response.cart.length);
+            $("#cart_footer").show();
+            $(".popover-content #cart_footer").show();
         }
 
         if(init) {
@@ -105,7 +112,7 @@ $(document).ready(function() {
         $('.filter_pane').on("change", '.filter_item input[type="checkbox"]', onFilterChange);
 
         cartListeners();
-        logoutListener();
+        $("#logout_button").on("click", onLogoutButtonClick);
     };
 
     /*-------------------- Event listeners for select or deselect filter --------------------*/
@@ -357,7 +364,7 @@ $(document).ready(function() {
 
         // Checkout the cart
         $(document).on("click", "#check_out_cart", function() {
-            alert("Checkout the cart ?");
+            window.location = main_url + "/checkout";
         });
 
         // Hide any open popovers when the anywhere else in the body is clicked
@@ -371,23 +378,21 @@ $(document).ready(function() {
     };
 
     /*-------------------- Logout button listener --------------------*/
-    var logoutListener = function() {
-        $("#logout_button").on("click", function(){
-            var url = main_url + "/customer/terminate/logout";
-            $.ajax({
-                type: "GET",
-                url: url,
-                dataType: "json",
-                success: function(response){
-                    sessionStorage.clear();
-                    window.location = main_url + "/index";
-                },
-                error: function(response){
-                    console.log("Error occured: " + response.responseText);
-                    sessionStorage.clear();
-                    window.location = main_url + "/index";
-                }
-            });
+    var onLogoutButtonClick = function() {
+        var url = main_url + "/customer/terminate/logout";
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            success: function(response){
+                sessionStorage.clear();
+                window.location = main_url + "/index";
+            },
+            error: function(response){
+                console.log("Error occured: " + response.responseText);
+                sessionStorage.clear();
+                window.location = main_url + "/index";
+            }
         });
     };
 

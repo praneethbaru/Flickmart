@@ -29,4 +29,16 @@ router.get('/mainpage', authUtil, function(request, response, next) {
     });
 });
 
+// Get checkout page
+router.get('/checkout', authUtil, function(request, response, next) {
+    fs.readFile('checkout.html', function(err, data) {
+        if(err){
+            throw err;
+        }
+        response.writeHead(200, {'Content-Type': 'text/html'});
+        response.write(data);
+        response.end();
+    });
+});
+
 module.exports = router;

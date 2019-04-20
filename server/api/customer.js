@@ -300,7 +300,7 @@ router.post('/deletecart', authUtil, function(request, response, next) {
                     response.status(500).json({"error": err.message});
                     return;
                 }
-                
+
                 if(!custResult || !custResult.result || custResult.result.nModified != 1){
                     response.status(500).json({"error": "Error updating customer cart."});
                     return;
@@ -314,6 +314,120 @@ router.post('/deletecart', authUtil, function(request, response, next) {
         response.status(500).json({"error": e.message});
         return;
     }
+});
+
+// Create transaction for customer
+router.post('/transaction', authUtil, function(request, response, next) {
+    var cust_id = request.body.customer_id;
+    var transaction = request.body.transaction;
+
+    if(!cust_id || !ObjectId.isValid(cust_id) || !transaction) {
+        response.status(500).json({"error": "Invalid transaction or customer id."});
+        return;
+    }
+
+    transaction['_id']  = new ObjectId();
+
+    dbUtil.getDb().collection("customer").findOneAndUpdate({ "_id": ObjectId(cust_id) }, { $push: { "transactions": transaction } }, function(err, result) {
+        if(err) {
+            response.status(500).json({"error": err.message});
+            return;
+        }
+
+        if(!result || !result.value || !result.ok) {
+            response.status(500).json({"error": "Failed to create transaction."});
+            return;
+        }
+
+        dbUtil.getDb().collection("customer").findOneAndUpdate({ "_id": ObjectId(cust_id) }, { $set: { "cart": [] } }, function(cartError, cartResult) {
+            if(cartError) {
+                response.status(500).json({"error": cartError.message});
+                return;
+            }
+
+            if(!cartResult || !cartResult.value || !cartResult.ok) {
+                response.status(500).json({"error": "Failed to create transaction."});
+                return;
+            }
+
+            response.status(200).json({"success": true});
+        });
+    });
+});
+
+// Get transactions for customer
+router.get('/transactions/:customerId', authUtil, function(request, response, next) {
+    var customerId = request.params.customerId;
+    if(customerId == null || !ObjectId.isValid(customerId)) {
+        response.status(500).json({
+            "error": "Customer id is invalid."
+        });
+        return;
+    }
+
+    var query = { _id: ObjectId(customerId) };
+    var aggregate_query = [ { $match: query },
+            { $project : { "transactions": 1, "_id": 0 } },
+            { $unwind: "$transactions" },
+            { $unwind: "$transactions.cart" },
+            {
+                $project: {
+                    "_oid": {
+                        $toObjectId: "$transactions.cart._id"
+                    },
+                    "org_document": "$$ROOT"
+                }
+            },
+            {
+                $lookup:{
+                    "from": "movies",
+                    "localField": "_oid",
+                    "foreignField": "_id",
+                    "as": "movie_docs"
+                }
+            },
+            {
+                $group:{
+                    _id: "$org_document.transactions._id",
+                    items: {
+                        $push: {
+                            "transaction": "$org_document.transactions",
+                            "movie": { $arrayElemAt: [ "$movie_docs", 0 ] }
+                        }
+                    }
+                }
+            },
+            {
+                $project: { "items.transaction": 1, "items.movie.Title" : 1 }
+            }
+    ];
+
+    dbUtil.getDb().collection("customer").aggregate(aggregate_query, function(filterErr, filterResult) {
+        if (filterErr) {
+            response.status(500).json({"error": filterErr.message});
+            return;
+        }
+
+        if (!filterResult) {
+            response.status(500).json({"error": "Error fetching customer transactions."});
+            return;
+        }
+
+        // Reading filters aggregate
+        filterResult.get(function(aggFilterErr, aggFilterRes) {
+            if (aggFilterErr) {
+                response.status(500).json({"error": aggFilterErr.message});
+                return;
+            }
+
+            if(!aggFilterRes || !aggFilterRes.length) {
+                response.status(200).json({ transactions:[] });
+                return;
+            }
+
+            response.status(200).json({ transactions: aggFilterRes });
+        });
+    });
 });
 
 // Customer logout
