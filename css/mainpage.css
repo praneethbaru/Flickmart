@@ -241,7 +241,7 @@ div.arrow{
     padding: 2% 3%;
     font-size:15px;
 }
-#know_more, #addToCart{
+#know_more, #addToCart, #edit_movie, #delete_movie{
     background-color: indianred;
     border: 1px solid indianred;
     border-radius: 100px;
@@ -386,4 +386,21 @@ table{
 #pop-up-message.visible {
 	visibility: visible;
 	opacity: 1
+}
+
+.admin_func{
+position: absolute;
+bottom: 0;
+right: 10%;
+}
+#edit_movie{
+    float: right;
+    font-size: 117%;
+    margin: 0 -38%;
+    padding: 2% 20%;
+}
+
+#delete_movie {
+    padding: 2% 20%;
+font-size: 117%;
 }

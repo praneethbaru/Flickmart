@@ -25,6 +25,7 @@ $(document).ready(function() {
             loadUserCart();
         }
     };
+    /*---------------------Loads admin page--------------------*/
 
     /*-------------------- Loads user cart --------------------*/
     var loadUserCart = function() {
@@ -432,9 +433,24 @@ $(document).ready(function() {
                                         '<div class="col-sm-12" style="margin: 3% 0;">'+
                                         '<button type="button" class="btn btn-primary" id="know_more" data-toggle="modal" data-target="#myModal">KNOW MORE...</button></div>'+
                                         '<div class="col-sm-12" style="margin: 3% 0;">'+
-                                        '<button type="button" id="addToCart">ADD TO CART</button></div></div></div>';
+                                        '<button type="button" id="addToCart">ADD TO CART</button></div>';
+                    if(user.role==2){
+                        var admin_content = "";
+                        console.log("hey admin ");
+                        html_content = html_content +
+                        '<div class="row admin_func"> <div class="col-sm-6">' +
+                        '<button type= "button" id="edit_movie"> EDIT</button>'+
+                        '</div>'+
+                        '<div class="col-sm-6">'+
+                        '<button type= "button" id="delete_movie"> DELETE</button>'+
+                        '</div></div></div></div>';
 
-                    $(".container").find(".right_pane .content").append(html_content);
+                        $(".container").find(".right_pane .content ").append(html_content);
+                    }
+                    else{
+                    $(".container").find(".right_pane .content").append(html_content + "</div></div>");
+                    }
+
                 });
 
                 // Update pagination footer
