@@ -8,7 +8,7 @@ const ObjectId = require('mongodb').ObjectId;
 
 // Get movies endpoint with search, filter, pagination and sort
 router.post('/getmovies', auth, function(request, response, next) {
-    var query = [];
+    var query = [{ "IsDeleted": false }];
 
     if(!request.body || !request.body.page) {
         response.status(500).json({"error": "Page number not received."});
@@ -29,11 +29,6 @@ router.post('/getmovies', auth, function(request, response, next) {
             filter_obj[filter_name] = { $all: filter_values };
             query.push(filter_obj);
         }
-    }
-
-    // If empty query, find all
-    if(query.length == 0) {
-        query.push({});
     }
 
     var sort = {};
@@ -146,6 +141,88 @@ router.post('/getmovies', auth, function(request, response, next) {
         });
     });
 
+});
+
+
+// Add movie endpoint
+router.post('/', auth, function(request, response, next) {
+    var movieObj = request.body;
+
+    if(!movieObj){
+        response.status(500).json({
+            "error": "Movie document invalid."
+        });
+        return;
+    }
+
+    dbUtil.getDb().collection("movies").insertOne(movieObj, function(error, result) {
+        if (error) {
+            response.status(500).json({"error": error.message});
+            return;
+        }
+
+        response.status(200).json({"success": result.insertedCount + " document(s) inserted"});
+    });
+});
+
+// Edit movie endpoint
+router.put('/:id', auth, function(request, response, next) {
+    var movieObj = request.body;
+    var movieId = request.params.id;
+
+    if(movieId == null || !ObjectId.isValid(movieId)) {
+        response.status(500).json({
+            "error": "Movie id is invalid."
+        });
+        return;
+    }
+
+    if(!movieObj){
+        response.status(500).json({
+            "error": "Movie document invalid."
+        });
+        return;
+    }
+
+    dbUtil.getDb().collection("movies").findOneAndUpdate({ "_id": ObjectId(movieId) }, { $set: movieObj },  function(err, result) {
+        if(err) {
+            response.status(500).json({"error": err.message});
+            return;
+        }
+
+        if(!result || !result.value) {
+            response.status(500).json({"error": "Failed to update movie."});
+            return;
+        }
+
+        response.status(200).json({"success": "1 movie document updated."});
+    });
+});
+
+// Delete movie endpoint
+router.delete('/:id', auth, function(request, response, next) {
+    var movieId = request.params.id;
+
+    if(movieId == null || !ObjectId.isValid(movieId)) {
+        response.status(500).json({
+            "error": "Movie id is invalid."
+        });
+        return;
+    }
+
+    dbUtil.getDb().collection("movies").findOneAndUpdate({ "_id": ObjectId(movieId) }, { $set: { "IsDeleted": true } },  function(err, result) {
+        if(err) {
+            response.status(500).json({"error": err.message});
+            return;
+        }
+
+        if(!result || !result.value) {
+            response.status(500).json({"error": "Failed to delete movie."});
+            return;
+        }
+
+        response.status(200).json({"success": "1 movie document deleted."});
+    });
 });
 
 module.exports = router;
