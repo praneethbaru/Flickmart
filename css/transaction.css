@@ -1,0 +1,173 @@
+* {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+}
+body{
+    height: 100%;
+}
+td{
+    padding: 20px;
+}
+
+th{
+    padding: 0;
+}
+
+a:hover {
+    text-decoration: none;
+}
+h3{
+    text-align: center;
+}
+.logo{
+    position: relative;
+    width:25%;
+}
+
+.navbarStyle{
+    margin-bottom: 0;
+    background-color: black;
+}
+.navbar-nav{
+    width: 100%;
+}
+.col3{
+    margin: 10% 0;
+    color: white;
+}
+.user_icon{
+    margin-top: 145%;
+    color: white;
+    font-size: 25px;
+    float: right;
+    padding: 17%;
+}
+.no_of_items{
+    margin-top: 58%;
+    color: white;
+    float: right;
+    padding-right: 15px;
+    position: absolute;
+    margin-left: 30%;
+    font-size: 110%;
+    font-weight: 600;
+}
+.cart_icon{
+    color: white;
+    font-size: 25px;
+    float: right;
+    padding: 5%;
+}
+
+#logout_button{
+  margin-top: 52%;
+    color: white;
+    font-size: 179%;
+    font-weight: 600;
+    float: right;
+    text-decoration: none;
+}
+.container{
+    width: 80%;
+    padding: 0;
+    margin: auto;
+}
+.row_container{
+    margin: 0;
+}
+
+/*-------------------Table Layout-------------------*/
+.row {
+    width: 86%;
+    margin: auto;
+}
+
+#thTransaction{
+width: 10%;
+}
+
+#thDate{
+width: 10%;
+}
+
+#thAddress{
+width: 30%;
+}
+
+#thTotal{
+width: 15%;
+}
+
+/*-------------------Modal Layout-------------------*/
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  position: relative;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 0;
+  width: 70%;
+  box-shadow: 5px 10px #888888
+  -webkit-animation-name: animatetop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatetop;
+  animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.closeModal {
+  color: white;
+  float: right;
+  font-size: 45px;
+  font-weight: bold;
+}
+
+.closeModal:hover,
+.closeModal:focus {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-header {
+  padding: 2px 16px;
+  background-color: indianred;
+  color: white;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+  padding: 2px 16px;
+  background-color: indianred;
+  color: white;
+}
+
+.modal.active{
+    display: block;
+}
