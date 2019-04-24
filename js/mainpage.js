@@ -109,6 +109,9 @@ $(document).ready(function() {
         $("#pagination_footer #next_page").on("click", onNextPageClick);
 
         $(document).on("click", ".description #know_more", onKnowMoreClick);
+        $(document).on("click", ".description #edit_movie", onEditMovieClick);
+        $(document).on("click", ".addVideo #add_video", onAddMovieClick);
+        $(document).on("click", ".description #delete_movie", onDeleteMovieClick);
         $('.sort_by input[type="radio"]').on("change", onSortChange);
         $('.filter_pane').on("change", '.filter_item input[type="checkbox"]', onFilterChange);
 
@@ -203,6 +206,55 @@ $(document).ready(function() {
         }
     };
 
+/*-------------------- Event listener to display edit_movie popup --------------------*/
+      var onAddMovieClick = function(){
+          $("#myEditModal").modal();
+          var td_content = $("<tbody></tbody>");
+          td_content.append("<tr><th>Image</th><td><input type='file' name='image'></input></td></tr>");
+          $.each(movie_fields, function(index, field) {
+              td_content.append("<tr><th>"+field+"</th><td><input type='text' name='image'></input></td></tr>");
+          });
+          td_content.append("<tr><th>Stock</th><td><input type='text' ></input></td></tr>");
+            $(".edit_content").find(".m_body").find(".edit_table").empty().append(td_content);
+
+      };
+/*End of Add video*/
+/*-------------------- Event listener to display edit_movie popup --------------------*/
+        var onEditMovieClick = function(){
+          $("#myEditModal").modal();
+          var id = $(this).parent().parent().parent().find(".row1").find("h3").attr("data-id");
+          $.each(curr_response.data, function(i, movie){
+              if(movie._id == id) {
+                  $(".edit_content").attr("data-id", movie._id);
+                 $(".m_header").find("h4").text(movie.Title);
+                  var td_content = $("<tbody></tbody>");
+                  td_content.append("<tr><th>Image</th><td><img src='images/"+movie._id+".jpg'</img></td></tr>");
+                  td_content.append("<tr><th></th><td><input type='file' name='image'></input></td></tr>");
+                  $.each(movie_fields, function(index, field) {
+                      if(!movie[field] || movie[field] == "" || ($.isArray(movie[field]) && movie[field].length == 0)){
+                          return;
+                      }
+
+                      if($.isArray(movie[field])) {
+                          td_content.append('<tr><th>' + field + ' : </th><td><input type="text" value="' + movie[field].join(", ") +'"></input></td></tr>');
+                      }
+                      else if(field == "Website") {
+                          td_content.append('<tr><th>' + field + ' : </th><td><input type="text" value="'  + movie[field] +  '"></input></td></tr>');
+                      }
+                      else {
+                          td_content.append('<tr><th>' + field + ' : </th><td> <input type="text" value="' + movie[field] + '"></input></td></tr>');
+                      }
+                  });
+                  td_content.append("<tr><th>Stock</th><td><input type='text' value='"+movie.Stock+"'></input></td></tr>");
+                  $(".edit_content").find(".m_body").find(".edit_table").empty().append(td_content);
+              }
+          });
+        };
+        /*end of edit movie*/
+/*-------------------- Event listener to display delete_movie popup --------------------*/
+      var onDeleteMovieClick = function(){
+        $("#myDeleteModal").modal();
+      }
     /*-------------------- Event listener to display know more popup --------------------*/
     var onKnowMoreClick = function() {
         var id = $(this).parent().parent().find(".row1").find("h3").attr("data-id");
@@ -312,6 +364,7 @@ $(document).ready(function() {
             var movie_id = $(this).parents(".modal-content").attr("data-id");
             onAddToCart(movie_id, 1);
         });
+
 
         // On click update cart in cart popover
         $(document).on("click", "#update_item", function() {
@@ -439,10 +492,10 @@ $(document).ready(function() {
                         console.log("hey admin ");
                         html_content = html_content +
                         '<div class="row admin_func"> <div class="col-sm-6">' +
-                        '<button type= "button" id="edit_movie"> EDIT</button>'+
+                        '<button type= "button" class="btn btn-primary" id="edit_movie" data-toggle="modal_edit" data-target="#edit_modal"> Edit</button>'+
                         '</div>'+
                         '<div class="col-sm-6">'+
-                        '<button type= "button" id="delete_movie"> DELETE</button>'+
+                        '<button type= "button" id="delete_movie"> Delete</button>'+
                         '</div></div></div></div>';
 
                         $(".container").find(".right_pane .content ").append(html_content);

@@ -28,8 +28,8 @@
                 <a href="#" id="search_btn" id-"search_btn">
                     <span class="glyphicon glyphicon-search search_icon"></span>
                 </a>
-                <div class="filter_content">
-
+                <div class="addVideo">
+                  <button type="button" class="new_video" id="add_video" data-toggle="modal_edit" data-target="#edit_modal">ADD NEW VIDEO </button>
                 </div>
             </li>
             <li class="col-sm-4">
@@ -125,16 +125,16 @@
 
             <!-- The Modal for know_more btn -->
             <div class="modal" id="myModal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
+                <div class="modal-dialog m_dialog">
+                    <div class="modal-content knowmore_content">
 
                         <!-- Modal Header for know_more btn  -->
-                        <div class="modal-header">
-                            <h2 class="modal-title">Title</h2>
+                        <div class="modal-header m_header">
+                            <h2 class="modal-title m_title">Title</h2>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <!-- Modal body for know_more btn  -->
-                        <div class="modal-body row">
+                        <div class="modal-body m_body row">
                             <div class="col-sm-4 left_col ">
                                 <img src="images/clapper_login.png" alt="movie_image" style="width: 100%;border-radius: 20px;"/>
                                 <p><b>PRICE : </b> <span id="price_modal">0$</span> </p>
@@ -142,18 +142,54 @@
                                 <button type="button" id="addToCart" class="addToCart_btn">ADD TO CART</button>
                             </div>
                             <div class="col-sm-8 right_col">
-                                <table class="modal_desc">
+                                <table class="modal_desc ">
                                 </table>
                             </div>
                         </div>
                         <!-- Modal footer for know_more btn -->
-                        <div class="modal-footer">
+                        <div class="modal-footer m_footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
 
                     </div>
                 </div>
             </div>
+
+            <!-- The Modal for edit_movie btn -->
+            <!-- Modal -->
+            <div class=" modal modal_edit fade" id="myEditModal" role="dialog">
+              <div class="modal-dialog m_dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content edit_content" data-id = "">
+                  <div class="modal-header m_header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add a new Movie</h4>
+                  </div>
+                  <div class="modal-body m_body">
+                      <table align="center" class="edit_table">
+                      </table>
+                  </div>
+                  <div class="modal-footer m_footer">
+                    <button type="button" class="btn btn-default" id="edit_confirm">Edit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- The Modal for delete_movie btn -->
+            <div class=" modal modal_delete fade" id="myDeleteModal" role="dialog">
+                <div class="modal-dialog d_dialog">
+                  <div class="modal-content del_content" date-id="">
+                    <h4> Are you sure you want to delete the movie ?</h4>
+                    <button type="button" class="btn btn-default" id="yes">YES</button>
+                    <button type="button" class="btn btn-default" id="no" data-dismiss="modal">NO</button>
+                  </div>
+                </div>
+            </div>
+
         </div><!--container-->
 
         <!-- Popup message -->

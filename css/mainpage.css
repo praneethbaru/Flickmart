@@ -56,6 +56,14 @@ h3{
     font-size: 25px;
     background: indianred;
 }
+.new_video{
+    background: indianred;
+    border-radius: 100px;
+    color: white;
+    margin: -7% 20%;
+    border: none;
+    padding: 2% 3%;
+}
 #search_btn{
     display: inline;
 }
@@ -218,7 +226,7 @@ div.arrow{
     height: 50%;
 }
 .description{
-    height: 50%;
+    height: 60%;
     background: #d2d2d2;
 }
 .description p{
@@ -249,29 +257,32 @@ div.arrow{
     color: white;
     font-size: 120%;
 }
-.modal-header{
+.m_header{
     background-color: indianred;
 }
-.modal-dialog{
+.m_dialog{
     width: 75%;
 }
-.modal-title{
+.m_title{
     color: white;
     text-align: center;
 }
-.modal-header .close {
+.m_header .close {
     color: white;
     font-size: 56px;
     margin-top: -4%;
     opacity: 1;
 }
-.modal-body,.modal-footer{
+.m_body,.m_footer{
     background-color: black;
     color: white;
     margin: 0;
 }
-.modal-footer{
+.m_footer{
     border-top: 1px solid indianred;
+}
+.modal_edit{
+  z-index: 10000;
 }
 table{
     color: white;
@@ -286,6 +297,31 @@ table{
 .modal_desc tr td>a{
     color: white;
     font-size: 17px;
+}
+.m_dialog{
+  width: 70%;
+}
+.edit_content h4{
+  text-align: center;
+  color: white;
+}
+.edit_table{
+  width: 85%;
+}
+.edit_table th, .edit_table td{
+  font-size: 140%;
+}
+.edit_table td input{
+    color: black;
+  padding:  1%;
+  width: 100%;
+}
+.d_dialog{
+  width: 30%;
+
+}
+.del_content{
+  padding: 5%;
 }
 .left_col{
     text-align: center;
