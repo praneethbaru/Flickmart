@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <!-- Metadata -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Linking Stylesheets -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+        <link rel="stylesheet" type="text/css" href="css/transaction.css">
+
+        <title>FlickMart</title>
+    </head>
+    <body>
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-default navStyle navbarStyle">
+            <ul class="nav navbar-nav navList">
+                <li class="col-sm-4" style="">
+                    <a href="#"><img src="images/logo.png " alt="Logo " class="logo" /></a>
+                </li>
+                <li class="col-sm-4" style="">
+                </li>
+                <li class="col-sm-4">
+                    <div class="row col3">
+                        <div class="col-sm-2">
+                            <a href="#">
+                                <span class="glyphicon glyphicon-user user_icon"></span>
+                            </a>
+                        </div>
+                        <div class="col-sm-2 cart" >
+                            <span class="no_of_items" >0</span>
+                            <a id="cart-popover" class="btn" data-toggle="popover" data-placement="bottom" title="Shopping Cart">
+                                <span class="glyphicon glyphicon-shopping-cart user_icon" id="cart_icon" data-toggle="modal">
+                                    <a href="#" data-toggle="popover" title="Popover Header" data-target="#myCart" data-placement="bottom" data-content="Some content inside the popover" class="cart"></a></span>
+                                </a>
+                            </div>
+                        <div class="col-sm-4"><a id="logout_button" href="#">Logout</a></div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!--Container-->
+        <div class="container checkout">
+            <h3>Order History</h3>
+            <div class="row">
+                <div class="col-sm-12 table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th id="thTransaction"> Transaction #</th>
+                                <th id="thDate"> Date</th>
+                                <th id="thAddress">Address</th>
+                                <th id="thTotal"> Total Price</th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td id="test">101</td>
+                            <td>01-01-2020</td>
+                            <td>7421, Frankford Road, Apt 2612, Dallas, TX</td>
+                            <td>$420</td>
+                        </tr>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="myModal" class="modal">
+          <!-- Modal content -->
+          <div class="modal-content">
+            <div class="modal-header">
+              <span class="closeModal">&times;</span>
+              <h2>Modal Header</h2>
+            </div>
+            <div class="modal-body">
+              <p>Some text in the Modal Body</p>
+              <p>Some other text...</p>
+            </div>
+            <div class="modal-footer">
+              <h3>Modal Footer</h3>
+            </div>
+          </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <script src="js/transaction.js"></script>
+    </body>
+</html>
