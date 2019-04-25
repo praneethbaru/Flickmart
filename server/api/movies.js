@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
 const dbUtil = require('./../mongoDbUtil');
 const auth = require('./../authUtil');
 const ObjectId = require('mongodb').ObjectId;
@@ -155,13 +156,25 @@ router.post('/', auth, function(request, response, next) {
         return;
     }
 
+    var image_data = movieObj.ImageData;
+    delete movieObj.ImageData;
+
     dbUtil.getDb().collection("movies").insertOne(movieObj, function(error, result) {
         if (error) {
             response.status(500).json({"error": error.message});
             return;
         }
 
-        response.status(200).json({"success": result.insertedCount + " document(s) inserted"});
+        var base64Data = image_data.replace(/^data:image\/jpeg+;base64,/, "");
+
+        fs.writeFile("./images/" + result.insertedId + ".jpg", base64Data, 'base64', function(err) {
+            if(err) {
+                response.status(500).json({"error": err.message});
+                return;
+            }
+
+            response.status(200).json({"success": result.insertedCount + " document(s) inserted"});
+        });
     });
 });
 
@@ -184,6 +197,9 @@ router.put('/:id', auth, function(request, response, next) {
         return;
     }
 
+    var image_data = movieObj.ImageData;
+    delete movieObj.ImageData;
+
     dbUtil.getDb().collection("movies").findOneAndUpdate({ "_id": ObjectId(movieId) }, { $set: movieObj },  function(err, result) {
         if(err) {
             response.status(500).json({"error": err.message});
@@ -195,7 +211,21 @@ router.put('/:id', auth, function(request, response, next) {
             return;
         }
 
-        response.status(200).json({"success": "1 movie document updated."});
+        if(image_data) {
+            var base64Data = image_data.replace(/^data:image\/jpeg+;base64,/, "");
+
+            fs.writeFile("./images/" + movieId + ".jpg", base64Data, 'base64', function(error) {
+                if(error) {
+                    response.status(500).json({"error": error.message});
+                    return;
+                }
+
+                response.status(200).json({"success": "1 movie document updated."});
+            });
+        }
+        else {
+            response.status(200).json({"success": "1 movie document updated."});
+        }
     });
 });
 

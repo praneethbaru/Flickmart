@@ -2,9 +2,14 @@ $(document).ready(function() {
     var main_url = window.location.protocol + "//" + window.location.host;
     var user = null;
     var movie_fields = ["Genre", "Released", "Year", "Rated", "Director", "Writer", "Actors", "Plot", "Runtime", "Ratings", "Language", "Country", "Awards", "Production", "BoxOffice", "Website"];
-    var movie_filter = { "page": 1, "search": null, "sort_field": "Ratings", "sort_order": -1, "filters": []};
+    var movie_filter = { "page": 1, "search": null, "sort_field": "Ratings", "sort_order": -1, "filters": [] };
     var curr_response = {};
     var curr_cart = [];
+
+    /*-------------------- Capitalize text utility --------------------*/
+    var capitalize = function(text) {
+        return text.substr(0,1).toUpperCase() + text.substr(1);
+    };
 
     /*-------------------- Entry point for scripts on page --------------------*/
     var initMainPage = function() {
@@ -22,10 +27,12 @@ $(document).ready(function() {
             onLogoutButtonClick();
         }
         else {
+            if(user.role != 2) {
+                $("#add_video").remove();
+            }
             loadUserCart();
         }
     };
-    /*---------------------Loads admin page--------------------*/
 
     /*-------------------- Loads user cart --------------------*/
     var loadUserCart = function() {
@@ -110,13 +117,380 @@ $(document).ready(function() {
 
         $(document).on("click", ".description #know_more", onKnowMoreClick);
         $(document).on("click", ".description #edit_movie", onEditMovieClick);
-        $(document).on("click", ".addVideo #add_video", onAddMovieClick);
+        $(document).on("click", "#add_video", onAddMovieClick);
         $(document).on("click", ".description #delete_movie", onDeleteMovieClick);
         $('.sort_by input[type="radio"]').on("change", onSortChange);
         $('.filter_pane').on("change", '.filter_item input[type="checkbox"]', onFilterChange);
 
         cartListeners();
+        $(document).on("change", "#movie-image", onImageChange);
+        $("#edit_confirm").on("click", onSaveMovieClick);
+        $("#delete_yes").on("click", onDeleteMovieConfirmClick);
         $("#logout_button").on("click", onLogoutButtonClick);
+    };
+
+    /*-------------------- Event listener for image change in add/edit movie --------------------*/
+    var onImageChange = function() {
+        var preview = $('#movie-image-preview');
+        var file = $('#movie-image').prop("files");
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.attr("src", reader.result);
+        }
+
+        if (file && file.length) {
+            reader.readAsDataURL(file[0]);
+        }
+        else {
+            var type = $("#myEditModal .m_header").attr("data-type");
+            if(type.trim().toLowerCase() == "add") {
+                preview.attr("src", "images/no-image.jpg");
+            }
+            else if(type.trim().toLowerCase() == "edit") {
+                preview.attr("src", "images/" + $("#myEditModal .m_header").attr("data-id") + ".jpg");
+            }
+        }
+    };
+
+    /*-------------------- Event listener for delete movie --------------------*/
+    var onDeleteMovieConfirmClick = function() {
+        var movie_id = $("#myDeleteModal").attr("data-id");
+        var url = main_url + "/movies/" + movie_id;
+
+        $.ajax({
+            type: "DELETE",
+            url: url,
+            data: JSON.stringify({}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function(response) {
+                if(response && response.success) {
+                    showPopupMessage("success", "Movie deleted successfully.");
+                }
+                else {
+                    showPopupMessage("error", "Error occured while deleting movie.");
+                }
+                setTimeout(function(){ window.location.reload(); }, 2000);
+            },
+            error: function(response) {
+                console.log("Error occured: " + response.responseText);
+                showPopupMessage("error", response.error);
+                setTimeout(function(){ window.location.reload(); }, 2000);
+            }
+        });
+    };
+
+    /*-------------------- Event listener for add/edit movie --------------------*/
+    var onSaveMovieClick = function() {
+        var movie_object = {};
+
+        // Title
+        var movie_title = $("#movie-title").val();
+        if(!movie_title || movie_title.trim() == "") {
+            showPopupMessage("error", "Enter movie title!");
+            return;
+        }
+        movie_object['Title'] = capitalize(movie_title.trim());
+
+        // Year
+        var movie_year = $("#movie-year").val();
+        if(!movie_year || movie_year.trim() == "") {
+            showPopupMessage("error", "Enter movie year!");
+            return;
+        }
+        movie_year = movie_year.trim();
+
+        if(!$.isNumeric(movie_year) || parseInt(movie_year) < 0 || parseInt(movie_year) > 9999) {
+            showPopupMessage("error", "Enter valid movie year between 0 and 9999!");
+            return;
+        }
+        movie_object['Year'] = movie_year.trim();
+
+        // Rated
+        var movie_rated = $("#movie-rated").val();
+        if(!movie_rated || movie_rated.trim() == "") {
+            movie_object['Rated'] = "N/A";
+        }
+        else {
+            movie_rated = movie_rated.trim();
+            if(!$.inArray(movie_rated.toLowerCase, ["g", "pg", "pg-13", "r", "nc-17"])) {
+                showPopupMessage("error", "Enter valid movie rated!");
+                return;
+            }
+            else {
+                movie_object['Rated'] = movie_rated.toUpperCase();
+            }
+        }
+
+        // Released
+        var movie_released = $("#movie-released").val();
+        if(movie_released && movie_released.trim() != "") {
+            movie_object['Released'] = movie_released.trim();
+        }
+
+        // Runtime
+        var movie_runtime = $("#movie-runtime").val();
+        if(movie_runtime && movie_runtime.trim() != "") {
+            movie_object['Runtime'] = movie_runtime.trim();
+        }
+
+        // Genre
+        var movie_genre = $("#movie-genre").val();
+        if(!movie_genre || movie_genre.trim() == "") {
+            showPopupMessage("error", "Enter movie genre!");
+            return;
+        }
+        else {
+            var genres = [];
+            $.each(movie_genre.trim().split(","), function(i, genre){
+                if(genre.trim() != "") {
+                    genres.push(capitalize(genre.trim()));
+                }
+            });
+
+            if(genres.length == 0) {
+                showPopupMessage("error", "Enter movie genre!");
+                return;
+            }
+            else {
+                movie_object["Genre"] = genres;
+            }
+        }
+
+        // Director
+        var movie_director = $("#movie-director").val();
+        if(movie_director && movie_director.trim() != "") {
+            movie_object['Director'] = capitalize(movie_director.trim());
+        }
+
+        // Writer
+        var movie_writer = $("#movie-writer").val();
+        if(movie_writer && movie_writer.trim() != "") {
+            movie_object['Writer'] = capitalize(movie_writer.trim());
+        }
+
+        // Actors
+        var movie_actors = $("#movie-actors").val();
+        if(movie_actors && movie_actors.trim() != "") {
+            var actors = [];
+            $.each(movie_actors.trim().split(","), function(i, actor){
+                if(actor.trim() != "") {
+                    actors.push(capitalize(actor.trim()));
+                }
+            });
+
+            if(actors.length != 0) {
+                movie_object["Actors"] = actors;
+            }
+        }
+
+        // Plot
+        var movie_plot = $("#movie-plot").val();
+        if(!movie_plot || movie_plot.trim() == "") {
+            showPopupMessage("error", "Enter movie plot!");
+            return;
+        }
+        movie_object['Plot'] = capitalize(movie_plot.trim());
+
+        // Language
+        var movie_language = $("#movie-language").val();
+        if(!movie_language || movie_language.trim() == "") {
+            showPopupMessage("error", "Enter movie language!");
+            return;
+        }
+        else {
+            var languages = [];
+            $.each(movie_language.trim().split(","), function(i, language){
+                if(language.trim() != "") {
+                    languages.push(capitalize(language.trim()));
+                }
+            });
+
+            if(languages.length == 0) {
+                showPopupMessage("error", "Enter movie language!");
+                return;
+            }
+            else {
+                movie_object["Language"] = languages;
+            }
+        }
+
+        // Country
+        var movie_country = $("#movie-country").val();
+        if(!movie_country || movie_country.trim() == "") {
+            showPopupMessage("error", "Enter movie country!");
+            return;
+        }
+        else {
+            var countries = [];
+            $.each(movie_country.trim().split(","), function(i, country){
+                if(country.trim() != "") {
+                    countries.push(capitalize(country.trim()));
+                }
+            });
+
+            if(countries.length == 0) {
+                showPopupMessage("error", "Enter movie country!");
+                return;
+            }
+            else {
+                movie_object["Country"] = countries;
+            }
+        }
+
+        // Awards
+        var movie_awards = $("#movie-awards").val();
+        if(movie_awards && movie_awards.trim() != "") {
+            movie_object['Awards'] = capitalize(movie_awards.trim());
+        }
+
+        // Ratings
+        var movie_ratings = $("#movie-ratings").val();
+        if(!movie_ratings || movie_ratings.trim() == "") {
+            showPopupMessage("error", "Enter movie ratings!");
+            return;
+        }
+        else if(!$.isNumeric(movie_ratings.trim())) {
+            showPopupMessage("error", "Enter valid movie ratings!");
+            return;
+        }
+        else {
+            movie_ratings = parseFloat(movie_ratings.trim());
+            if(movie_ratings < 0.0 || movie_ratings > 10.0) {
+                showPopupMessage("error", "Enter valid movie ratings!");
+                return;
+            }
+            movie_object['Ratings'] = parseFloat(movie_ratings.toFixed(1));
+        }
+
+        // Box office
+        var movie_boxoffice = $("#movie-boxoffice").val();
+        if(movie_boxoffice && movie_boxoffice.trim() != "") {
+            movie_object['BoxOffice'] = movie_boxoffice.trim();
+        }
+
+        // Production
+        var movie_production = $("#movie-production").val();
+        if(movie_production && movie_production.trim() != "") {
+            movie_object['Production'] = capitalize(movie_production.trim());
+        }
+
+        // Website
+        var movie_website = $("#movie-website").val();
+        if(movie_website && movie_website.trim() != "") {
+            movie_website = movie_website.trim();
+            var url_regex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm;
+            if(url_regex.test(movie_website)) {
+                movie_object['Website'] = movie_website;
+            }
+            else{
+                showPopupMessage("error", "Enter valid movie website!");
+                return;
+            }
+        }
+
+        // Price
+        var movie_price = $("#movie-price").val();
+        if(!movie_price || movie_price.trim() == "") {
+            showPopupMessage("error", "Enter movie price!");
+            return;
+        }
+        else if(!$.isNumeric(movie_price.trim())) {
+            showPopupMessage("error", "Enter valid movie price!");
+            return;
+        }
+        else {
+            movie_price = parseFloat(movie_price.trim());
+            if(movie_price <= 0.0) {
+                showPopupMessage("error", "Enter valid movie price!");
+                return;
+            }
+            movie_object['Price'] = parseFloat(movie_price.toFixed(2));
+        }
+
+        // Stock
+        var movie_stock = $("#movie-stock").val();
+        if(!movie_stock || movie_stock.trim() == "") {
+            showPopupMessage("error", "Enter movie stock!");
+            return;
+        }
+        else if(!$.isNumeric(movie_stock.trim())) {
+            showPopupMessage("error", "Enter valid movie stock!");
+            return;
+        }
+        else {
+            movie_stock = parseInt(movie_stock.trim());
+            if(movie_stock <= 0) {
+                showPopupMessage("error", "Enter valid movie stock!");
+                return;
+            }
+            movie_object['Stock'] = movie_stock;
+        }
+
+        // Image
+        var file = $('#movie-image').prop("files");
+        var reader = new FileReader();
+
+        reader.onloadend = function() {
+            uploadImageCallback(movie_object, reader.result);
+        }
+
+        if (file && file.length) {
+            reader.readAsDataURL(file[0]);
+        }
+        else if($("#myEditModal .m_header").attr("data-type").trim().toLowerCase() == "edit") {
+            uploadImageCallback(movie_object, null);
+        }
+        else {
+            showPopupMessage("error", "Upload valid movie image!");
+            return;
+        }
+    };
+
+    /*-------------------- Triggered on image upload end --------------------*/
+    var uploadImageCallback = function (movie_object, result) {
+        movie_object['ImageData'] = result;
+        movie_object['IsDeleted'] = false;
+
+        var type = $("#myEditModal .m_header").attr("data-type");
+
+        if(type.trim().toLowerCase() == "add") {
+            updateMovieDb(type.trim().toLowerCase(), "POST", null, movie_object);
+        }
+        else if(type.trim().toLowerCase() == "edit") {
+            updateMovieDb(type.trim().toLowerCase(), "PUT", $("#myEditModal .m_header").attr("data-id"), movie_object);
+        }
+    };
+
+    /*-------------------- Updates movie database based on add/update --------------------*/
+    var updateMovieDb = function(type, method, movie_id, movie_object) {
+        var url = main_url + "/movies";
+        if(movie_id) {
+            url += "/" + movie_id;
+        }
+
+        $.ajax({
+            type: method,
+            url: url,
+            data: JSON.stringify(movie_object),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function(response) {
+                if(response && response.success) {
+                    showPopupMessage("success", "Movie added/updated successfully.");
+                }
+                else {
+                    showPopupMessage("success", "Error occured while adding/updating movie.");
+                }
+                setTimeout(function(){ window.location.reload(); }, 2000);
+            },
+            error: function(response) {
+                console.log("Error occured: " + response.responseText);
+                showPopupMessage("error", response.error);
+                setTimeout(function(){ window.location.reload(); }, 2000);
+            }
+        });
     };
 
     /*-------------------- Event listeners for select or deselect filter --------------------*/
@@ -206,55 +580,63 @@ $(document).ready(function() {
         }
     };
 
-/*-------------------- Event listener to display edit_movie popup --------------------*/
-      var onAddMovieClick = function(){
-          $("#myEditModal").modal();
-          var td_content = $("<tbody></tbody>");
-          td_content.append("<tr><th>Image</th><td><input type='file' name='image'></input></td></tr>");
-          $.each(movie_fields, function(index, field) {
-              td_content.append("<tr><th>"+field+"</th><td><input type='text' name='image'></input></td></tr>");
-          });
-          td_content.append("<tr><th>Stock</th><td><input type='text' ></input></td></tr>");
-            $(".edit_content").find(".m_body").find(".edit_table").empty().append(td_content);
+    /*-------------------- Event listener to display edit_movie popup --------------------*/
+    var onAddMovieClick = function(){
+        $("#myEditModal").modal();
+        $("#myEditModal .m_header").attr("data-type", "add");
+        $("#myEditModal .m_header").find("h4").text("Add Movie");
+        var td_content = $("<tbody></tbody>");
+        td_content.append("<tr><th></th><td><img id='movie-image-preview' src='images/no-image.jpg'</img></td></tr>");
+        td_content.append("<tr><th>Image</th><td><input id='movie-image' type='file' name='image' accept='.jpg'></input></td></tr>");
+        td_content.append("<tr><th>Title</th><td><input id='movie-title' type='text' name='title'></input></td></tr>");
+        $.each(movie_fields, function(index, field) {
+            td_content.append("<tr><th>" + field + "</th><td><input type='text' id='movie-" + field.toLowerCase() + "' name='" + field + "'></input></td></tr>");
+        });
+        td_content.append("<tr><th>Stock</th><td><input id='movie-stock' type='text'></input></td></tr>");
+        td_content.append("<tr><th>Price</th><td><input id='movie-price' type='text'></input></td></tr>");
+        $(".edit_content").find(".m_body").find(".edit_table").empty().append(td_content);
+    };
 
-      };
-/*End of Add video*/
-/*-------------------- Event listener to display edit_movie popup --------------------*/
-        var onEditMovieClick = function(){
-          $("#myEditModal").modal();
-          var id = $(this).parent().parent().parent().find(".row1").find("h3").attr("data-id");
-          $.each(curr_response.data, function(i, movie){
-              if(movie._id == id) {
-                  $(".edit_content").attr("data-id", movie._id);
-                 $(".m_header").find("h4").text(movie.Title);
-                  var td_content = $("<tbody></tbody>");
-                  td_content.append("<tr><th>Image</th><td><img src='images/"+movie._id+".jpg'</img></td></tr>");
-                  td_content.append("<tr><th></th><td><input type='file' name='image'></input></td></tr>");
-                  $.each(movie_fields, function(index, field) {
-                      if(!movie[field] || movie[field] == "" || ($.isArray(movie[field]) && movie[field].length == 0)){
-                          return;
-                      }
+    /*-------------------- Event listener to display edit_movie popup --------------------*/
+    var onEditMovieClick = function(){
+        $("#myEditModal").modal();
+        var id = $(this).parent().parent().parent().find(".row1").find("h3").attr("data-id");
+        $("#myEditModal .m_header").attr("data-type", "edit");
+        $("#myEditModal .m_header").find("h4").text("Edit Movie");
+        $.each(curr_response.data, function(i, movie){
+            if(movie._id == id) {
+                $("#myEditModal .m_header").attr("data-id", movie._id);
+                var td_content = $("<tbody></tbody>");
+                td_content.append("<tr><th></th><td><img id='movie-image-preview' src='images/" + movie._id + ".jpg'</img></td></tr>");
+                td_content.append("<tr><th>Image</th><td><input id='movie-image' type='file' name='image' accept='.jpg'></input></td></tr>");
+                td_content.append("<tr><th>Title</th><td><input id='movie-title' type='text' name='title' value='" + movie.Title + "'></input></td></tr>");
+                $.each(movie_fields, function(index, field) {
+                    if(!movie[field] || movie[field] == "" || ($.isArray(movie[field]) && movie[field].length == 0)){
+                        td_content.append('<tr><th>' + field + '</th><td> <input type="text" id="movie-' + field.toLowerCase() + '" value=""></input></td></tr>');
+                        return;
+                    }
 
-                      if($.isArray(movie[field])) {
-                          td_content.append('<tr><th>' + field + ' : </th><td><input type="text" value="' + movie[field].join(", ") +'"></input></td></tr>');
-                      }
-                      else if(field == "Website") {
-                          td_content.append('<tr><th>' + field + ' : </th><td><input type="text" value="'  + movie[field] +  '"></input></td></tr>');
-                      }
-                      else {
-                          td_content.append('<tr><th>' + field + ' : </th><td> <input type="text" value="' + movie[field] + '"></input></td></tr>');
-                      }
-                  });
-                  td_content.append("<tr><th>Stock</th><td><input type='text' value='"+movie.Stock+"'></input></td></tr>");
-                  $(".edit_content").find(".m_body").find(".edit_table").empty().append(td_content);
-              }
-          });
-        };
-        /*end of edit movie*/
-/*-------------------- Event listener to display delete_movie popup --------------------*/
-      var onDeleteMovieClick = function(){
+                    if($.isArray(movie[field])) {
+                        td_content.append('<tr><th>' + field + '</th><td><input type="text" id="movie-' + field.toLowerCase() + '" value="' + movie[field].join(", ") +'"></input></td></tr>');
+                    }
+                    else {
+                        td_content.append('<tr><th>' + field + '</th><td> <input type="text" id="movie-' + field.toLowerCase() + '" value="' + movie[field] + '"></input></td></tr>');
+                    }
+                });
+                td_content.append("<tr><th>Stock</th><td><input id='movie-stock' type='text' value='" + movie.Stock + "'></input></td></tr>");
+                td_content.append("<tr><th>Price</th><td><input id='movie-price' type='text' value='" + movie.Price + "'></input></td></tr>");
+                $(".edit_content").find(".m_body").find(".edit_table").empty().append(td_content);
+            }
+        });
+    };
+
+    /*-------------------- Event listener to display delete_movie popup --------------------*/
+    var onDeleteMovieClick = function(){
+        var id = $(this).closest(".card").attr("data-id");
+        $("#myDeleteModal").attr("data-id", id);
         $("#myDeleteModal").modal();
-      }
+    };
+
     /*-------------------- Event listener to display know more popup --------------------*/
     var onKnowMoreClick = function() {
         var id = $(this).parent().parent().find(".row1").find("h3").attr("data-id");
@@ -487,23 +869,20 @@ $(document).ready(function() {
                                         '<button type="button" class="btn btn-primary" id="know_more" data-toggle="modal" data-target="#myModal">KNOW MORE...</button></div>'+
                                         '<div class="col-sm-12" style="margin: 3% 0;">'+
                                         '<button type="button" id="addToCart">ADD TO CART</button></div>';
-                    if(user.role==2){
-                        var admin_content = "";
-                        console.log("hey admin ");
+                    if(user.role == 2){
                         html_content = html_content +
-                        '<div class="row admin_func"> <div class="col-sm-6">' +
-                        '<button type= "button" class="btn btn-primary" id="edit_movie" data-toggle="modal_edit" data-target="#edit_modal"> Edit</button>'+
-                        '</div>'+
-                        '<div class="col-sm-6">'+
-                        '<button type= "button" id="delete_movie"> Delete</button>'+
-                        '</div></div></div></div>';
+                                    '<div class="row admin_func"> <div class="col-sm-6">' +
+                                    '<button type= "button" class="btn btn-primary" id="edit_movie" data-toggle="modal_edit" data-target="#edit_modal"> Edit</button>' +
+                                    '</div>' +
+                                    '<div class="col-sm-6">' +
+                                    '<button type= "button" id="delete_movie"> Delete</button>' +
+                                    '</div></div></div></div>';
 
                         $(".container").find(".right_pane .content ").append(html_content);
                     }
                     else{
-                    $(".container").find(".right_pane .content").append(html_content + "</div></div>");
+                        $(".container").find(".right_pane .content").append(html_content + "</div></div>");
                     }
-
                 });
 
                 // Update pagination footer

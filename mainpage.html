@@ -28,9 +28,7 @@
                 <a href="#" id="search_btn" id-"search_btn">
                     <span class="glyphicon glyphicon-search search_icon"></span>
                 </a>
-                <div class="addVideo">
-                  <button type="button" class="new_video" id="add_video" data-toggle="modal_edit" data-target="#edit_modal">ADD NEW VIDEO </button>
-                </div>
+                <button type="button" class="new_video" id="add_video" data-toggle="modal_edit" data-target="#edit_modal">ADD NEW VIDEO </button>
             </li>
             <li class="col-sm-4">
                 <div class="row col3">
@@ -130,13 +128,13 @@
 
                         <!-- Modal Header for know_more btn  -->
                         <div class="modal-header m_header">
-                            <h2 class="modal-title m_title">Title</h2>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h2 class="modal-title m_title">Title</h2>
                         </div>
                         <!-- Modal body for know_more btn  -->
                         <div class="modal-body m_body row">
                             <div class="col-sm-4 left_col ">
-                                <img src="images/clapper_login.png" alt="movie_image" style="width: 100%;border-radius: 20px;"/>
+                                <img src="images/clapper_login.png" alt="movie_image" style="width:100%; border-radius:20px; height:50%"/>
                                 <p><b>PRICE : </b> <span id="price_modal">0$</span> </p>
                                 <p><b>STOCK : </b><span id="stock_modal"> 10 </span></p>
                                 <button type="button" id="addToCart" class="addToCart_btn">ADD TO CART</button>
@@ -171,7 +169,7 @@
                       </table>
                   </div>
                   <div class="modal-footer m_footer">
-                    <button type="button" class="btn btn-default" id="edit_confirm">Edit</button>
+                    <button type="button" class="btn btn-default" id="edit_confirm">Save</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                   </div>
                 </div>
@@ -184,7 +182,7 @@
                 <div class="modal-dialog d_dialog">
                   <div class="modal-content del_content" date-id="">
                     <h4> Are you sure you want to delete the movie ?</h4>
-                    <button type="button" class="btn btn-default" id="yes">YES</button>
+                    <button type="button" class="btn btn-default" id="delete_yes">YES</button>
                     <button type="button" class="btn btn-default" id="no" data-dismiss="modal">NO</button>
                   </div>
                 </div>

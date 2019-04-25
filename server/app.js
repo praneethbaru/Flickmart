@@ -14,7 +14,7 @@ const movieRoutes = require('./api/movies');
 app.use(morgan('dev'));
 
 // Parsing JSON body data in requests
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 
 // Database connection code
 dbUtil.connect(function(error){
