@@ -126,7 +126,20 @@ $(document).ready(function() {
         $(document).on("change", "#movie-image", onImageChange);
         $("#edit_confirm").on("click", onSaveMovieClick);
         $("#delete_yes").on("click", onDeleteMovieConfirmClick);
+        $("#goto_transactions").on("click", onGotoTransactionsClick);
+        $("#go_home").on("click", backToMainPage);
         $("#logout_button").on("click", onLogoutButtonClick);
+    };
+
+    /*-------------------- Redirect to Mainpage --------------------*/
+    var backToMainPage = function(){
+        var url = main_url + "/mainpage";
+        window.location = url;
+    };
+
+    /*-------------------- Event listener for navigations to transactions page --------------------*/
+    var onGotoTransactionsClick = function() {
+        window.location = main_url + "/transaction";
     };
 
     /*-------------------- Event listener for image change in add/edit movie --------------------*/
@@ -674,6 +687,7 @@ $(document).ready(function() {
 
     /*-------------------- Delete from cart function  --------------------*/
     var onDeleteFromCart = function(movies) {
+        $(".processing").removeClass("hide");
         var url = main_url + "/customer/deletecart";
         var data = {
             "customer_id": user._id,
@@ -690,16 +704,19 @@ $(document).ready(function() {
                 curr_cart = response;
                 showPopupMessage("success", "Deleted movies from cart successfully");
                 renderCart(response, false);
+                $(".processing").addClass("hide");
             },
             error: function(response) {
                 console.log("Error occured: " + response.responseText);
                 showPopupMessage("error", response.error);
+                $(".processing").addClass("hide");
             }
         });
     };
 
     /*-------------------- Add/Update to cart function  --------------------*/
     var onAddToCart = function(movieId, quantity) {
+        $(".processing").removeClass("hide");
         var url = main_url + "/customer/updatecart";
         var data = {
             "customer_id": user._id,
@@ -724,10 +741,12 @@ $(document).ready(function() {
                 curr_cart = response;
                 showPopupMessage("success", "Updated cart successfully");
                 renderCart(response, false);
+                $(".processing").addClass("hide");
             },
             error: function(response) {
                 console.log("Error occured: " + response.responseText);
                 showPopupMessage("error", response.error);
+                $(".processing").addClass("hide");
             }
         });
     };
@@ -834,6 +853,7 @@ $(document).ready(function() {
 
     /*-------------------- Loads movies from database based on criteria --------------------*/
     var loadMovies = function() {
+        $(".processing").removeClass("hide");
         var url = main_url + "/movies/getmovies";
 
         $.ajax({
@@ -892,12 +912,14 @@ $(document).ready(function() {
                 if(response.current_page == 1) {
                     updateFiltersPane();
                 }
+                $(".processing").addClass("hide");
             },
             error: function(response){
                 console.log("Error occured: " + response.responseText);
                 $(".container").find(".right_pane .content").empty().append('<div class="no_response">Error occurred. Could not fetch response.</div>');
                 $("#pagination_footer").hide();
                 updateFiltersPane();
+                $(".processing").addClass("hide");
             }
         });
     };//loadMovies end

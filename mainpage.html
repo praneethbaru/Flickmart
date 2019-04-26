@@ -21,7 +21,7 @@
     <nav class="navbar navbar-default navStyle navbarStyle">
         <ul class="nav navbar-nav navList">
             <li class="col-sm-4" style="">
-                <a href="#"><img src="images/logo.png " alt="Logo " class="logo" /></a>
+                <a id="go_home" href="#"><img src="images/logo.png " alt="Logo " class="logo" /></a>
             </li>
             <li class="col-sm-4">
                 <input type="text" id="search"></input>
@@ -33,7 +33,7 @@
             <li class="col-sm-4">
                 <div class="row col3">
                     <div class="col-sm-2">
-                        <a href="#">
+                        <a id="goto_transactions" href="#">
                             <span class="glyphicon glyphicon-user user_icon"></span>
                         </a>
                     </div>
@@ -189,6 +189,12 @@
             </div>
 
         </div><!--container-->
+
+        <!--processing tinted page layout-->
+        <div class="processing hide">
+            <h1 class="head">Loading...</h1>
+            <div class="loader"></div>
+        </div>
 
         <!-- Popup message -->
         <div id="pop-up-message">

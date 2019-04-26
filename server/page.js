@@ -41,4 +41,16 @@ router.get('/checkout', authUtil, function(request, response, next) {
     });
 });
 
+// Get transactions page
+router.get('/transaction', authUtil, function(request, response, next) {
+    fs.readFile('transaction.html', function(err, data) {
+        if(err){
+            throw err;
+        }
+        response.writeHead(200, {'Content-Type': 'text/html'});
+        response.write(data);
+        response.end();
+    });
+});
+
 module.exports = router;

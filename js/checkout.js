@@ -232,6 +232,7 @@ $(document).ready(function() {
 
     /*-------------------- Adds all event listeners on page --------------------*/
     var addEventListeners = function() {
+        $("#go_home").on("click", backToMainPage);
         $("#back_to_main").on("click", backToMainPage);
         $("#click_here").on("click", backToMainPage);
         $("#confirm_payment").on("click", onConfirmPaymentClick);

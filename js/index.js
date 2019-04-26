@@ -223,7 +223,7 @@ $(document).ready(function() {
     };
 
     /*-------------------- Register user --------------------*/
-    var onRegisterUser = function(){
+    var onRegisterUser = function() {
         if(register_fname != "false" || register_lname != "false" || register_email != "false" || register_phone != "false" || register_pass != "false" || register_cpass != "false"){
             return;
         }
@@ -272,7 +272,6 @@ $(document).ready(function() {
 
     /*-------------------- Login user --------------------*/
     var onLoginUser = function(){
-
         if(login_email != "false" || login_pass != "false") {
             return;
         }
@@ -290,16 +289,19 @@ $(document).ready(function() {
             success: function(response){
                 if(response && response.success && response.customer){
                     $("#login_fail").hide();
+                    $('#email, #password').val('');
                     sessionStorage.setItem("customer", JSON.stringify(response.customer));
                     window.location = main_url + "/mainpage";
                 }
                 else{
                     $("#login_fail").show();
+                    $('#email, #password').val('');
                 }
             },
             error: function(response){
                 console.log("Error occured: " + response.responseText);
                 $("#login_fail").show();
+                $('#email, #password').val('');
             }
         });
     };
