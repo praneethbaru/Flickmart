@@ -736,6 +736,7 @@ $(document).ready(function() {
                 if(response && response.error) {
                     showPopupMessage("error", response.error);
                     renderCart(curr_cart, false);
+                    $(".processing").addClass("hide");
                     return;
                 }
                 curr_cart = response;
