@@ -3,7 +3,6 @@ module.exports = function(request, response, next) {
         return next();
     }
     else {
-        //return response.redirect('/index');
-        return next(); // To Remove
+        return response.redirect('/index');
     }
 };
