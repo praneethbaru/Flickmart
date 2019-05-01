@@ -871,6 +871,7 @@ $(document).ready(function() {
                     $(".container").find(".right_pane .content").empty().append('<div class="no_response">No results found. Try using different criteria.</div>');
                     $("#pagination_footer").hide();
                     updateFiltersPane();
+                    $(".processing").addClass("hide");
                     return;
                 }
 
